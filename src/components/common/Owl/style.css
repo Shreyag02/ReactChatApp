@@ -1,0 +1,28 @@
+.owl {
+  background-image: url("../../../assets/images/owl-login.png");
+}
+.owl .hand {
+  border-radius: 40px;
+  background-color: #472d20;
+  transform: scaleY(0.6);
+  transition: 0.3s ease-out;
+}
+.owl .hand.password {
+  transform: translateX(42px) translateY(-15px) scale(0.7);
+}
+.owl .hand.hand-r.password {
+  transform: translateX(-42px) translateY(-15px) scale(0.7);
+}
+.owl .arms .arm {
+  background-image: url("../../../assets/images/owl-login-arm.png");
+  transition: 0.3s ease-out;
+}
+.owl .arms .arm.password {
+  transform: translateX(40px) translateY(-40px);
+}
+.owl .arms .arm.arm-r {
+  transform: scaleX(-1);
+}
+.owl .arms .arm.arm-r.password {
+  transform: translateX(-40px) translateY(-40px) scaleX(-1);
+}
