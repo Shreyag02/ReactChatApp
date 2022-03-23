@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { auth, db } from "../../../firebase";
 import { signOut } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
+import { AuthContext } from "../../../context/auth";
 
 const Navbar = () => {
+  console.log(useContext(AuthContext));
+  const { user } = useContext(AuthContext);
+
   const navigate = useNavigate();
 
   const handleSignout = async () => {
@@ -35,7 +39,7 @@ const Navbar = () => {
       </Link>
       <div>
         {console.log(auth)}
-        {auth.currentUser ? (
+        {user ? (
           <>
             <Link to="/profile" className="mr-4 border-gray-400">
               Profile

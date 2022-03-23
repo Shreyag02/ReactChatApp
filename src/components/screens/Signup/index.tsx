@@ -38,6 +38,7 @@ const Signup = () => {
     e.preventDefault();
     console.log("data-", data);
     setData({ ...data, error: null, loading: true });
+
     if (!name || !email || !password) {
       setData({ ...data, error: "All fields are required" });
     }
@@ -48,7 +49,6 @@ const Signup = () => {
         email,
         password
       );
-      console.log("user-", result.user);
 
       await setDoc(doc(db, "users", result.user.uid), {
         uid: result.user.uid,
@@ -57,6 +57,7 @@ const Signup = () => {
         createdAt: Timestamp.fromDate(new Date()),
         isOnline: true,
       });
+
       setData({
         name: "",
         email: "",
@@ -64,6 +65,7 @@ const Signup = () => {
         error: null,
         loading: false,
       });
+
       navigate("/home");
     } catch (error) {
       setData({ ...data, error: error, loading: false });

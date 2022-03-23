@@ -33,7 +33,7 @@ const Login = () => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    console.log("data-", data);
+
     setData({ ...data, error: null, loading: true });
     if (!email || !password) {
       setData({ ...data, error: "All fields are required" });
@@ -41,7 +41,6 @@ const Login = () => {
 
     try {
       const result = await signInWithEmailAndPassword(auth, email, password);
-      console.log("user-", result.user);
 
       await updateDoc(doc(db, "users", result.user.uid), {
         isOnline: true,
