@@ -7,7 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
-import { auth, db } from "../../../firebase";
+import { auth, db } from "../../../services/firebase";
 
 const Login = () => {
   const [isFocused, setIsFocused] = useState(false);

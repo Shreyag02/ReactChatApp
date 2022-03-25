@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../firebase";
+import { auth } from "../services/firebase";
 import Loading from "../components/common/Loading";
 
 type userType = any | null;

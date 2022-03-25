@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { auth, db } from "../../../firebase";
+import { auth, db } from "../../../services/firebase";
 import { signOut } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
 import { AuthContext } from "../../../context/auth";
