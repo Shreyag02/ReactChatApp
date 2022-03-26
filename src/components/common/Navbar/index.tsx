@@ -26,7 +26,7 @@ const Navbar = () => {
       <Link to="/home">
         <div className="flex items-center">
           <img
-            src={require("../../../assets/images/owl-logo.png")}
+            src={require("../../../assets/images/owl-cup.png")}
             alt="owlpost"
             className="h-8 mr-2"
           />
@@ -41,7 +41,7 @@ const Navbar = () => {
         {console.log(auth)}
         {user ? (
           <>
-            <Link to="/profile" className="mr-4 border-gray-400">
+            <Link to="/profile" className="mr-4 border-gray-500">
               Profile
             </Link>
             <button
@@ -53,7 +53,7 @@ const Navbar = () => {
           </>
         ) : (
           <>
-            <Link to="/signup" className="mr-2 pr-2 border-r border-gray-400">
+            <Link to="/signup" className="mr-2 pr-2 border-r border-gray-500">
               Signup
             </Link>
             <Link to="/login">Login</Link>

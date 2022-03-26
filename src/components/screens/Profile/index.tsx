@@ -95,7 +95,7 @@ const Profile = () => {
                 <img
                   src={user.avatar || Image}
                   alt="avatar"
-                  className="h-28 w-28 rounded-full border border-gray-400 transition-opacity"
+                  className="h-28 w-28 rounded-full border border-gray-500 transition-opacity"
                 />
                 <div className="overlay flex">
                   <label htmlFor="photo">
@@ -121,7 +121,7 @@ const Profile = () => {
           <div className="text_container w-3/5">
             <h3 className="text-xl font-bold mb-1">{user.name}</h3>
             <h3 className="text-lg ">{user.email}</h3>
-            <div className="border my-3 border-t-gray-400 w-full"></div>
+            <div className="border my-3 border-t-gray-500 w-full"></div>
             <h3 className="text-base ">
               {/* {console.log(user.createdAt.toDate().toUTCString())} */}
               Joined on: {user.createdAt.toDate().toDateString()}

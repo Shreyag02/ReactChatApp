@@ -79,7 +79,7 @@ const Signup = () => {
 
         <form
           onSubmit={handleSubmit}
-          className="w-11/12 max-w-sm rounded-lg -mt-3 p-5 md:py-12 md:px-7 text-white outline-none border-none"
+          className="form w-11/12 max-w-sm rounded-lg -mt-3 p-5 md:py-12 md:px-7 text-white outline-none border-none"
         >
           <div className="text-center">
             <img
