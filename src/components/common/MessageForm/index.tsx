@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import AttachmentBtn from "../../svg/AttachmentBtn";
+import Paperclip from "../../svg/Paperclip";
 import SendBtn from "../../svg/SendBtn";
 import TimesCircle from "../../svg/TimesCircle";
 
@@ -42,7 +43,12 @@ const MessageForm = ({ handleSubmit, text, setText, setImg, img }: any) => {
               >
                 <TimesCircle />
               </button>
-              <img src={img} className="h-8 rounded" />
+              <div className="flex items-center">
+                <span className="inline-block mr-2">
+                  <Paperclip />
+                </span>
+                <p className="inline-block">{img.name}</p>
+              </div>
             </div>
           </div>
           <div className="w-1/12"></div>

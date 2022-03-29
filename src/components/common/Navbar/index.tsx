@@ -52,7 +52,7 @@ const Navbar = () => {
           <div className="flex items-center">
             <Link
               to="/profile"
-              className="mr-4 border-gray-500 flex items-center"
+              className="mr-4 border border-gray-600 px-2 py-1 rounded-sm flex items-center"
             >
               <ProfileLogo />
               {userName}

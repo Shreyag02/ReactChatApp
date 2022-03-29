@@ -44,7 +44,7 @@ const Home = () => {
       });
       return () => unsub();
     }
-  }, []);
+  }, [user1]);
 
   const selectUser = (user: any) => {
     setChat(user);

@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import React, { useRef, useEffect, RefObject, createRef } from "react";
+import React, { useEffect, createRef } from "react";
 import Moment from "react-moment";
 
 const Message = ({ msg, user1 }: any) => {
@@ -9,7 +9,7 @@ const Message = ({ msg, user1 }: any) => {
     if (scrollRef.current) {
       scrollRef.current?.scrollIntoView({ behavior: "smooth" });
     }
-  }, [msg]);
+  }, [msg, scrollRef]);
   return (
     <div
       className={clsx(
