@@ -1,10 +1,15 @@
+import { type } from "node:os";
 import React from "react";
 
-const Paperclip = () => {
+type Props = {
+  size?: string;
+};
+const Paperclip = ({ size }: Props) => {
+  const no = size ? size : "6";
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      className="h-6 w-6"
+      className={`h-${no} w-${no}`}
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"

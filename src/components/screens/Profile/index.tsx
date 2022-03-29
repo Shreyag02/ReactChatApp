@@ -36,8 +36,8 @@ const Profile = () => {
         );
 
         try {
-          if (user.avatarPath) {
-            await deleteObject(ref(storage, user.avatarPath));
+          if (user?.avatarPath) {
+            await deleteObject(ref(storage, user?.avatarPath));
           }
 
           const snap = await uploadBytes(imgRef, avatar);
@@ -59,7 +59,7 @@ const Profile = () => {
       };
       uploadImg();
     }
-  }, [avatar, user.avatarPath]);
+  }, [avatar]);
 
   const deleteImage = async () => {
     try {
@@ -81,8 +81,8 @@ const Profile = () => {
   return user ? (
     <div className="flex flex-col md:flex-row justify-center items-center h-screen">
       <div className="profileCard rounded-lg w-11/12 max-w-md p-5 md:py-12 md:px-7 text-white outline-none border-none">
-        <div className="flex items-center justify-center">
-          <div className="img_container relative  cursor-pointer w-2/5 flex justify-center">
+        <div className="flex items-center justify-center flex-col">
+          <div className="img_container relative  cursor-pointer flex justify-center">
             {loader ? (
               <img
                 src={require("../../../assets/images/loading.gif")}
@@ -92,7 +92,7 @@ const Profile = () => {
             ) : (
               <>
                 <img
-                  src={user.avatar || Image}
+                  src={user?.avatar || Image}
                   alt="avatar"
                   className="h-28 w-28 rounded-full border border-gray-500 transition-opacity"
                 />
@@ -117,7 +117,7 @@ const Profile = () => {
             )}
           </div>
 
-          <div className="text_container w-3/5">
+          <div className="text_container text-center mt-3">
             <h3 className="text-xl font-bold mb-1">{user.name}</h3>
             <h3 className="text-lg ">{user.email}</h3>
             <div className="border my-3 border-t-gray-500 w-full"></div>

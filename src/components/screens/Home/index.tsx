@@ -5,6 +5,10 @@ import {
   query,
   where,
   onSnapshot,
+  doc,
+  getDoc,
+  updateDoc,
+  setDoc,
   addDoc,
   Timestamp,
   orderBy,
@@ -46,7 +50,7 @@ const Home = () => {
     }
   }, [user1]);
 
-  const selectUser = (user: any) => {
+  const selectUser = async (user: any) => {
     setChat(user);
 
     const user2 = user.uid;
@@ -64,6 +68,14 @@ const Home = () => {
         });
         setMsgs(chatMsgs);
       });
+
+      // get last message b/w logged in user and selected user
+      const docSnap = await getDoc(doc(db, "lastMsg", id));
+      // if last message exists and message is from selected user
+      if (docSnap.data() && docSnap.data()?.from !== user1) {
+        // update last message doc, set unread to false
+        await updateDoc(doc(db, "lastMsg", id), { unread: false });
+      }
     }
   };
 
@@ -101,6 +113,19 @@ const Home = () => {
         media: url || "",
         mediaSnap: snap || "",
       });
+
+      //setdoc will look for doc id, if it exists it will replace the existing doc, otherwise new doc will be created
+
+      await setDoc(doc(db, "lastMsg", id), {
+        text,
+        from: user1,
+        to: user2,
+        createdAt: Timestamp.fromDate(new Date()),
+        media: url || "",
+        mediaSnap: img.name || "",
+        unread: true,
+      });
+
       setText("");
       setImg("");
     }
@@ -110,7 +135,13 @@ const Home = () => {
     <div className="pt-16 pb-2 text-white flex h-screen">
       <div className="w-1/3 border-r border-gray-500">
         {users.map((user: any) => (
-          <User user={user} key={user.uid} selectUser={selectUser} />
+          <User
+            user={user}
+            key={user.uid}
+            selectUser={selectUser}
+            loggedInUser={user1}
+            chat={chat}
+          />
         ))}
       </div>
       <div className="w-2/3">
@@ -137,8 +168,8 @@ const Home = () => {
               </div>
             </div>
             <div
-              className="messages"
-              style={{ height: "calc(100vh - 200px)", overflowY: "auto" }}
+              className="messages overflow-y-auto overflow-x-hidden"
+              style={{ height: "calc(100vh - 200px)" }}
             >
               {msgs.length
                 ? msgs.map((msg: any, index: any) => (
