@@ -8,8 +8,8 @@ import {
 } from "firebase/storage";
 import { getDoc, doc, updateDoc } from "firebase/firestore";
 
-import CameraBtn from "../../common/CameraBtn";
-import DeleteBtn from "../../common/DeleteBtn";
+import CameraBtn from "../../svg/CameraBtn";
+import DeleteBtn from "../../svg/DeleteBtn";
 import Image from "../../../assets/images/avatar.png";
 
 const Profile = () => {
@@ -18,7 +18,6 @@ const Profile = () => {
   const [loader, setLoader] = useState(false);
 
   const updateAvatar = (e: any) => {
-    console.log(e.target.files[0]);
     setAvatar(e.target.files[0]);
   };
 

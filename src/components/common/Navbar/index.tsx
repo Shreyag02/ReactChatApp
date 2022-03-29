@@ -1,13 +1,23 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { auth, db } from "../../../services/firebase";
 import { signOut } from "firebase/auth";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc, getDoc } from "firebase/firestore";
 import { AuthContext } from "../../../context/auth";
+import ProfileLogo from "../../svg/ProfileLogo";
 
 const Navbar = () => {
-  console.log(useContext(AuthContext));
   const { user } = useContext(AuthContext);
+  const [userName, setUserName] = useState<string>("");
+
+  useEffect(() => {
+    if (auth.currentUser)
+      getDoc(doc(db, "users", auth.currentUser.uid)).then((docSnap) => {
+        if (docSnap.exists()) {
+          setUserName(docSnap.data().name);
+        }
+      });
+  }, []);
 
   const navigate = useNavigate();
 
@@ -38,11 +48,14 @@ const Navbar = () => {
         </div>
       </Link>
       <div>
-        {console.log(auth)}
         {user ? (
-          <>
-            <Link to="/profile" className="mr-4 border-gray-500">
-              Profile
+          <div className="flex items-center">
+            <Link
+              to="/profile"
+              className="mr-4 border-gray-500 flex items-center"
+            >
+              <ProfileLogo />
+              {userName}
             </Link>
             <button
               className="bg-gray-600 px-3 py-1 rounded-sm"
@@ -50,7 +63,7 @@ const Navbar = () => {
             >
               Logout
             </button>
-          </>
+          </div>
         ) : (
           <>
             <Link to="/signup" className="mr-2 pr-2 border-r border-gray-500">

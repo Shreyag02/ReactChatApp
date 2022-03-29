@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { db, auth } from "../../../services/firebase";
+import { db, auth, storage } from "../../../services/firebase";
 import {
   collection,
   query,
@@ -7,18 +7,24 @@ import {
   onSnapshot,
   addDoc,
   Timestamp,
+  orderBy,
 } from "firebase/firestore";
+import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
+
 import Image from "../../../assets/images/avatar.png";
 import startOwl from "../../../assets/images/owl-cup.png";
 
 import User from "../../common/User";
 import MessageForm from "../../common/MessageForm";
-import CloseBtn from "../../common/CloseBtn";
+import CloseBtn from "../../svg/CloseBtn";
+import Message from "../../common/Message";
 
 const Home = () => {
   const [users, setUsers] = useState<any>([]);
   const [chat, setChat] = useState<any>("");
   const [text, setText] = useState<string>("");
+  const [img, setImg] = useState<any>("");
+  const [msgs, setMsgs] = useState<[]>([]);
 
   const user1 = auth.currentUser?.uid;
 
@@ -40,11 +46,25 @@ const Home = () => {
     }
   }, []);
 
-  console.log(users);
-
   const selectUser = (user: any) => {
     setChat(user);
-    console.log("selected user", user);
+
+    const user2 = user.uid;
+    if (user1) {
+      const id = user1 > user2 ? `${user1 + user2}` : `${user2 + user1}`;
+
+      const msgsRef = collection(db, "messages", id, "chat");
+
+      const q = query(msgsRef, orderBy("createdAt", "asc"));
+
+      onSnapshot(q, (querySnapshot) => {
+        let chatMsgs: any = [];
+        querySnapshot.forEach((doc) => {
+          chatMsgs.push(doc.data());
+        });
+        setMsgs(chatMsgs);
+      });
+    }
   };
 
   const closeChat = () => setChat("");
@@ -58,13 +78,31 @@ const Home = () => {
     if (user1) {
       const id = user1 > user2 ? `${user1 + user2}` : `${user2 + user1}`;
 
+      let url, snap;
+
+      if (img) {
+        const imgRef = ref(
+          storage,
+          `images/${new Date().getTime()}-${img.name}`
+        );
+
+        const tempSnap = await uploadBytes(imgRef, img);
+        const tempUrl = await getDownloadURL(
+          ref(storage, tempSnap.ref.fullPath)
+        );
+        url = tempUrl;
+        snap = tempSnap.ref.fullPath;
+      }
       await addDoc(collection(db, "messages", id, "chat"), {
         text,
         from: user1,
         to: user2,
         createdAt: Timestamp.fromDate(new Date()),
+        media: url || "",
+        mediaSnap: snap || "",
       });
       setText("");
+      setImg("");
     }
   };
 
@@ -98,11 +136,22 @@ const Home = () => {
                 <CloseBtn closeChat={closeChat} />
               </div>
             </div>
-
+            <div
+              className="messages"
+              style={{ height: "calc(100vh - 200px)", overflowY: "auto" }}
+            >
+              {msgs.length
+                ? msgs.map((msg: any, index: any) => (
+                    <Message key={index} msg={msg} user1={user1} />
+                  ))
+                : null}
+            </div>
             <MessageForm
               handleSubmit={handleSubmit}
               text={text}
               setText={setText}
+              img={img}
+              setImg={setImg}
             />
           </div>
         ) : (

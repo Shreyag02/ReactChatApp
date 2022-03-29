@@ -1,8 +1,19 @@
+import clsx from "clsx";
 import React from "react";
-
-const SendBtn = () => {
+type sendBtnProps = {
+  isDisabled: boolean;
+};
+const SendBtn = ({ isDisabled }: sendBtnProps) => {
   return (
-    <button className="p-2 border-gray-500 bg-gray-500 rounded-full cursor-pointer">
+    <button
+      disabled={isDisabled}
+      className={clsx(
+        "p-2 rounded-full cursor-pointer",
+        isDisabled
+          ? " border-gray-500 bg-gray-500"
+          : "bg-green-700 border-green-700"
+      )}
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         className="h-5 w-5 text-white"

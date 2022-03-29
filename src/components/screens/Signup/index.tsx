@@ -36,7 +36,6 @@ const Signup = () => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    console.log("data-", data);
     setData({ ...data, error: null, loading: true });
 
     if (!name || !email || !password) {
