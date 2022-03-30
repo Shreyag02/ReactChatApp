@@ -8,6 +8,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../../../services/firebase";
+import { handleError } from "../../../utils/helper";
 
 const Login = () => {
   const [isFocused, setIsFocused] = useState(false);
@@ -95,7 +96,7 @@ const Login = () => {
             data={data}
             setData={setData}
           />
-          {error ? <p className="text-red-700 font-bold">{error}</p> : null}
+          {error ? handleError({ error }) : null}
           <FullButton
             label="Login"
             type="submit"

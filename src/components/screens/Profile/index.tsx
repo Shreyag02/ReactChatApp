@@ -59,6 +59,7 @@ const Profile = () => {
       };
       uploadImg();
     }
+    // eslint-disable-next-line
   }, [avatar]);
 
   const deleteImage = async () => {

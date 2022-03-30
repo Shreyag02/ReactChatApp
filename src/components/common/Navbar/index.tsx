@@ -17,7 +17,7 @@ const Navbar = () => {
           setUserName(docSnap.data().name);
         }
       });
-  }, [auth.currentUser]);
+  }, [auth]);
 
   const navigate = useNavigate();
 

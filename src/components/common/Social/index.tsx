@@ -1,18 +1,18 @@
 import React from "react";
-import { auth } from "../../../services/firebase";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+// import { auth } from "../../../services/firebase";
+import { GoogleAuthProvider } from "firebase/auth";
 
 const signInWithGoogle = async () => {
   const provider = new GoogleAuthProvider();
   provider.addScope("profile");
   provider.addScope("email");
-  const result = await signInWithPopup(auth, provider);
+  // const result = await signInWithPopup(auth, provider);
 
   // The signed-in user info.
-  const user = result.user;
+  // const user = result.user;
   // This gives you a Google Access Token.
-  const credential = GoogleAuthProvider.credentialFromResult(result);
-  const token = credential?.accessToken;
+  // const credential = GoogleAuthProvider.credentialFromResult(result);
+  // const token = credential?.accessToken;
 };
 
 const Social = () => {

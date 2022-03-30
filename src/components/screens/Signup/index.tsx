@@ -9,6 +9,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc, Timestamp } from "firebase/firestore";
 import { auth, db } from "../../../services/firebase";
+import { handleError } from "../../../utils/helper";
 
 const Signup = () => {
   const [isFocused, setIsFocused] = useState(false);
@@ -116,7 +117,8 @@ const Signup = () => {
             value={password}
             setData={setData}
           />
-          {error ? <p className="text-red-700 font-bold">{error}</p> : null}
+          {error ? handleError({ error }) : null}
+
           <FullButton
             label="Signup"
             type="submit"

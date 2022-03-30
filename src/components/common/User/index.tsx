@@ -19,7 +19,7 @@ const User = ({ user, selectUser, loggedInUser, chat }: any) => {
     });
 
     return () => unsub();
-  }, []);
+  }, [loggedInUser, user2]);
   return (
     <div
       className={clsx(
