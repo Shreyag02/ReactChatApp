@@ -1,6 +1,10 @@
 import React from "react";
 
-const CloseBtn = ({ closeChat }: any) => {
+type closeProps = {
+  closeChat: React.MouseEventHandler<HTMLButtonElement>;
+};
+
+const CloseBtn = ({ closeChat }: closeProps) => {
   return (
     <button onClick={closeChat}>
       <svg

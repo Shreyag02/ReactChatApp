@@ -1,6 +1,10 @@
 import React from "react";
 
-const DeleteBtn = ({ deleteImage }: any) => {
+type delProps = {
+  deleteImage: React.MouseEventHandler<SVGSVGElement>;
+};
+
+const DeleteBtn = ({ deleteImage }: delProps) => {
   return (
     <svg
       onClick={deleteImage}

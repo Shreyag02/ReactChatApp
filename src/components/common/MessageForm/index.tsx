@@ -1,18 +1,32 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, FormEventHandler } from "react";
 import AttachmentBtn from "../../svg/AttachmentBtn";
 import Paperclip from "../../svg/Paperclip";
 import SendBtn from "../../svg/SendBtn";
 import TimesCircle from "../../svg/TimesCircle";
 
-const MessageForm = ({ handleSubmit, text, setText, setImg, img }: any) => {
+type msgFormProps = {
+  handleSubmit: FormEventHandler<HTMLFormElement>;
+  text: string;
+  setText: Function;
+  setImg: Function;
+  img: File;
+};
+
+const MessageForm = ({
+  handleSubmit,
+  text,
+  setText,
+  setImg,
+  img,
+}: msgFormProps) => {
   const [isDisabled, setIsDisabled] = useState(true);
 
-  const changeMsg = (e: any) => {
+  const changeMsg = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
   };
 
-  const addImg = (e: any) => {
-    setImg(e.target.files[0]);
+  const addImg = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) setImg(e.target.files[0]);
     setIsDisabled(false);
   };
 
@@ -72,8 +86,6 @@ const MessageForm = ({ handleSubmit, text, setText, setImg, img }: any) => {
         </div>
 
         <div className="w-10/12">
-          {console.log("line 46", img)}
-
           <input
             className="w-full py-2 px-3 focus:outline-none
           placeholder:text-gray-200"

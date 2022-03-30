@@ -4,9 +4,9 @@ type props = {
   placeholder: string;
   type: string;
   value: string;
-  handleOwl?: any;
-  data: object;
-  setData: any;
+  handleOwl?: Function;
+  data: {};
+  setData: Function;
 };
 
 const InputField = ({
@@ -18,13 +18,13 @@ const InputField = ({
   data,
   setData,
 }: props) => {
-  const clicked = (e: any) => {
+  const clicked = (e: React.FocusEvent<HTMLInputElement>) => {
     if (type === "password") {
-      handleOwl();
+      handleOwl && handleOwl();
     }
   };
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
 

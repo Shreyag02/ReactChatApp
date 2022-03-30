@@ -5,20 +5,57 @@ import { doc, onSnapshot } from "firebase/firestore";
 import Image from "../../../assets/images/avatar.png";
 import Paperclip from "../../svg/Paperclip";
 
-const User = ({ user, selectUser, loggedInUser, chat }: any) => {
+type userProps = {
+  user: {
+    avatar: string;
+    avatarPath: string;
+    createdAt: any;
+    email: string;
+    isOnline: boolean;
+    name: string;
+    uid: string | undefined;
+  };
+
+  selectUser: Function;
+  loggedInUser: string | undefined;
+
+  chat: {
+    avatar: string;
+    avatarPath: string;
+    createdAt: any;
+    email: string;
+    isOnline: boolean;
+    name: string;
+    uid: string | undefined;
+  };
+};
+
+type lastMsgProps = {
+  createdAt: any;
+  from: string;
+  media: string;
+  mediaSnap: string;
+  text: string;
+  to: string;
+  unread: boolean;
+};
+
+const User = ({ user, selectUser, loggedInUser, chat }: userProps) => {
   const user2 = user.uid;
-  const [data, setData] = useState<any>("");
+  const [data, setData] = useState<lastMsgProps | any>();
 
   useEffect(() => {
-    const id =
-      loggedInUser > user2
-        ? `${loggedInUser + user2}`
-        : `${user2 + loggedInUser}`;
-    let unsub = onSnapshot(doc(db, "lastMsg", id), (doc) => {
-      setData(doc.data());
-    });
+    if (user2 && loggedInUser) {
+      const id =
+        loggedInUser > user2
+          ? `${loggedInUser + user2}`
+          : `${user2 + loggedInUser}`;
+      let unsub = onSnapshot(doc(db, "lastMsg", id), (doc) => {
+        setData(doc.data());
+      });
 
-    return () => unsub();
+      return () => unsub();
+    }
   }, [loggedInUser, user2]);
   return (
     <div
@@ -45,7 +82,6 @@ const User = ({ user, selectUser, loggedInUser, chat }: any) => {
               </span>
             ) : null}
           </div>
-          {console.log(data)}
 
           {data ? (
             <div className="flex text-xs opacity-80">

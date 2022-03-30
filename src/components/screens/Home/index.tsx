@@ -50,11 +50,19 @@ const Home = () => {
     }
   }, [user1]);
 
-  const selectUser = async (user: any) => {
+  const selectUser = async (user: {
+    avatar: string;
+    avatarPath: string;
+    createdAt: any;
+    email: string;
+    isOnline: boolean;
+    name: string;
+    uid: string | undefined;
+  }) => {
     setChat(user);
 
     const user2 = user.uid;
-    if (user1) {
+    if (user1 && user2) {
       const id = user1 > user2 ? `${user1 + user2}` : `${user2 + user1}`;
 
       const msgsRef = collection(db, "messages", id, "chat");

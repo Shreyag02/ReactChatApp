@@ -17,7 +17,7 @@ const Login = () => {
   type dataVal = {
     email: string;
     password: string;
-    error: any;
+    error: string | null | unknown;
     loading: boolean;
   };
 

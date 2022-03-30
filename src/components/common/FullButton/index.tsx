@@ -1,6 +1,6 @@
 type Props = {
   label: string;
-  type: any;
+  type: "button" | "submit" | "reset" | undefined;
   isDisabled?: boolean;
   isDisabledTxt?: string;
 };

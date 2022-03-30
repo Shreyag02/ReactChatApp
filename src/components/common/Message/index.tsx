@@ -2,8 +2,20 @@ import clsx from "clsx";
 import React, { useEffect, createRef } from "react";
 import Moment from "react-moment";
 
-const Message = ({ msg, user1 }: any) => {
-  const scrollRef = createRef<any>();
+type messageProps = {
+  msg: {
+    createdAt: any;
+    from: string;
+    media: string;
+    mediaSnap: string;
+    text: string;
+    to: string;
+  };
+  user1: string | undefined;
+};
+
+const Message = ({ msg, user1 }: messageProps) => {
+  const scrollRef = createRef<HTMLDivElement>();
 
   useEffect(() => {
     if (scrollRef.current) {
