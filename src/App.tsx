@@ -6,10 +6,10 @@ import {
 } from "react-router-dom";
 import "./App.css";
 import Navbar from "./components/common/Navbar";
-import Login from "./components/screens/Login";
-import Signup from "./components/screens/Signup";
-import Home from "./components/screens/Home";
-import Profile from "./components/screens/Profile";
+import Login from "./screens/Login";
+import Signup from "./screens/Signup";
+import Home from "./screens/Home";
+import Profile from "./screens/Profile";
 
 import AuthProvider from "./context/auth";
 import PrivateRoute from "./Routes/PrivateRoute";

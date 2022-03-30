@@ -1,71 +1,57 @@
 import React, { useState } from "react";
-import FullButton from "../../common/FullButton";
-import Social from "../../common/Social";
-import InputField from "../../common/InputField";
-import Owl from "../../common/Owl";
-
+import FullButton from "../../components/FullButton";
+import Social from "../../components/Social";
+import InputField from "../../components/InputField";
+import Owl from "../../components/Owl";
 import { Link, useNavigate } from "react-router-dom";
 
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc, Timestamp } from "firebase/firestore";
-import { auth, db } from "../../../services/firebase";
-import { handleError } from "../../../utils/helper";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { doc, updateDoc } from "firebase/firestore";
+import { auth, db } from "../../services/firebase";
+import { handleError } from "../../utils/helper";
 
-const Signup = () => {
+const Login = () => {
   const [isFocused, setIsFocused] = useState(false);
   const changeOwl = () => setIsFocused(!isFocused);
 
   type dataVal = {
-    name: string;
     email: string;
     password: string;
-    error: any;
+    error: string | null | unknown;
     loading: boolean;
   };
 
   const navigate = useNavigate();
 
   const [data, setData] = useState<dataVal>({
-    name: "",
     email: "",
     password: "",
     error: null,
     loading: false,
   });
 
-  const { name, email, password, error, loading } = data;
+  const { email, password, error, loading } = data;
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    setData({ ...data, error: null, loading: true });
 
-    if (!name || !email || !password) {
+    setData({ ...data, error: null, loading: true });
+    if (!email || !password) {
       setData({ ...data, error: "All fields are required" });
     }
 
     try {
-      const result = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+      const result = await signInWithEmailAndPassword(auth, email, password);
 
-      await setDoc(doc(db, "users", result.user.uid), {
-        uid: result.user.uid,
-        name,
-        email,
-        createdAt: Timestamp.fromDate(new Date()),
+      await updateDoc(doc(db, "users", result.user.uid), {
         isOnline: true,
       });
-
       setData({
-        name: "",
         email: "",
         password: "",
         error: null,
         loading: false,
       });
-
       navigate("/home");
     } catch (error) {
       setData({ ...data, error: error, loading: false });
@@ -87,24 +73,17 @@ const Signup = () => {
               src={require("../../../assets/images/owl-post.png")}
               alt="owl post"
             />
-            <h3 className="h3">Signup here</h3>
+            <h3 className="h3">Welcome Back!</h3>
           </div>
+
           <Social />
-          <InputField
-            id="name"
-            placeholder="Full Name"
-            type="text"
-            value={name}
-            data={data}
-            setData={setData}
-          />
 
           <InputField
             id="email"
             placeholder="Email"
             type="email"
-            data={data}
             value={email}
+            data={data}
             setData={setData}
           />
 
@@ -113,22 +92,21 @@ const Signup = () => {
             placeholder="Password"
             type="password"
             handleOwl={changeOwl}
-            data={data}
             value={password}
+            data={data}
             setData={setData}
           />
           {error ? handleError({ error }) : null}
-
           <FullButton
-            label="Signup"
+            label="Login"
             type="submit"
             isDisabled={loading}
-            isDisabledTxt="Registering..."
+            isDisabledTxt="Logging in..."
           />
 
           <div className="text-center my-2">
             <p>
-              Already have an account?<Link to="/login"> Login</Link>
+              Don't have an account? <Link to="/signup"> Signup</Link>
             </p>
           </div>
         </form>
@@ -137,4 +115,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default Login;

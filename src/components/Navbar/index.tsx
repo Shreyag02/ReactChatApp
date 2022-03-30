@@ -4,7 +4,7 @@ import { auth, db } from "../../../services/firebase";
 import { signOut } from "firebase/auth";
 import { doc, updateDoc, getDoc } from "firebase/firestore";
 import { AuthContext } from "../../../context/auth";
-import ProfileLogo from "../../svg/ProfileLogo";
+import ProfileLogo from "../../../assets/svg/ProfileLogo";
 
 const Navbar = () => {
   const { user } = useContext(AuthContext);

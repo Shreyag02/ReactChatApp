@@ -1,8 +1,8 @@
 import React, { useEffect, useState, FormEventHandler } from "react";
-import AttachmentBtn from "../../svg/AttachmentBtn";
-import Paperclip from "../../svg/Paperclip";
-import SendBtn from "../../svg/SendBtn";
-import TimesCircle from "../../svg/TimesCircle";
+import AttachmentBtn from "../../../assets/svg/AttachmentBtn";
+import Paperclip from "../../../assets/svg/Paperclip";
+import SendBtn from "../../../assets/svg/SendBtn";
+import TimesCircle from "../../../assets/svg/TimesCircle";
 
 type msgFormProps = {
   handleSubmit: FormEventHandler<HTMLFormElement>;

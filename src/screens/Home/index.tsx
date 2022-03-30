@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { db, auth, storage } from "../../../services/firebase";
+import { db, auth, storage } from "../../services/firebase";
 import {
   collection,
   query,
@@ -18,10 +18,10 @@ import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 import Image from "../../../assets/images/avatar.png";
 import startOwl from "../../../assets/images/owl-cup.png";
 
-import User from "../../common/User";
-import MessageForm from "../../common/MessageForm";
-import CloseBtn from "../../svg/CloseBtn";
-import Message from "../../common/Message";
+import User from "../../components/common/User";
+import MessageForm from "../../components/common/MessageForm";
+import CloseBtn from "../../assets/svg/CloseBtn";
+import Message from "../../components/common/Message";
 
 const Home = () => {
   const [users, setUsers] = useState<any>([]);

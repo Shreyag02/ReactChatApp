@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { db } from "../../../services/firebase";
 import { doc, onSnapshot } from "firebase/firestore";
 import Image from "../../../assets/images/avatar.png";
-import Paperclip from "../../svg/Paperclip";
+import Paperclip from "../../../assets/svg/Paperclip";
 
 type userProps = {
   user: {

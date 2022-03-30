@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { auth, storage, db } from "../../../services/firebase";
+import { auth, storage, db } from "../../services/firebase";
 import {
   ref,
   getDownloadURL,
@@ -8,8 +8,8 @@ import {
 } from "firebase/storage";
 import { getDoc, doc, updateDoc } from "firebase/firestore";
 
-import CameraBtn from "../../svg/CameraBtn";
-import DeleteBtn from "../../svg/DeleteBtn";
+import CameraBtn from "../../assets/svg/CameraBtn";
+import DeleteBtn from "../../assets/svg/DeleteBtn";
 import Image from "../../../assets/images/avatar.png";
 
 const Profile = () => {

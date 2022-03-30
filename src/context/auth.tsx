@@ -1,7 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../services/firebase";
-import Loading from "../components/svg/Loading";
+import Loading from "../assets/svg/Loading";
 
 type userType = any | null;
 export const AuthContext = createContext<userType | null>(null);
