@@ -1,9 +1,9 @@
 import clsx from "clsx";
 import React, { useState, useEffect } from "react";
-import { db } from "../../../services/firebase";
+import { db } from "../../services/firebase";
 import { doc, onSnapshot } from "firebase/firestore";
-import Image from "../../../assets/images/avatar.png";
-import Paperclip from "../../../assets/svg/Paperclip";
+import Image from "../../assets/images/avatar.png";
+import Paperclip from "../../assets/svg/Paperclip";
 
 type userProps = {
   user: {

@@ -10,7 +10,7 @@ import { getDoc, doc, updateDoc } from "firebase/firestore";
 
 import CameraBtn from "../../assets/svg/CameraBtn";
 import DeleteBtn from "../../assets/svg/DeleteBtn";
-import Image from "../../../assets/images/avatar.png";
+import Image from "../../assets/images/avatar.png";
 
 const Profile = () => {
   const [avatar, setAvatar] = useState<any>("");
@@ -86,7 +86,7 @@ const Profile = () => {
           <div className="img_container relative  cursor-pointer flex justify-center">
             {loader ? (
               <img
-                src={require("../../../assets/images/loading.gif")}
+                src={require("../../assets/images/loading.gif")}
                 alt="loading..."
                 className="h-20 w-20"
               />
@@ -102,8 +102,8 @@ const Profile = () => {
                     <CameraBtn />
                   </label>
                   {user.avatar ? (
-                    <span className="ml-2">
-                      <DeleteBtn deleteImage={deleteImage} />
+                    <span className="ml-2" onClick={deleteImage}>
+                      <DeleteBtn />
                     </span>
                   ) : null}
                   <input

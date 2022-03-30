@@ -1,10 +1,10 @@
 import React, { useContext, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { auth, db } from "../../../services/firebase";
+import { auth, db } from "../../services/firebase";
 import { signOut } from "firebase/auth";
 import { doc, updateDoc, getDoc } from "firebase/firestore";
-import { AuthContext } from "../../../context/auth";
-import ProfileLogo from "../../../assets/svg/ProfileLogo";
+import { AuthContext } from "../../context/auth";
+import ProfileLogo from "../../assets/svg/ProfileLogo";
 
 const Navbar = () => {
   const { user } = useContext(AuthContext);
@@ -17,7 +17,8 @@ const Navbar = () => {
           setUserName(docSnap.data().name);
         }
       });
-  }, [auth]);
+    // eslint-disable-next-line
+  }, [auth.currentUser]);
 
   const navigate = useNavigate();
 
@@ -26,7 +27,7 @@ const Navbar = () => {
       await updateDoc(doc(db, "users", auth.currentUser?.uid), {
         isOnline: false,
       });
-
+    setUserName("");
     await signOut(auth);
     navigate("/login");
   };
@@ -36,13 +37,13 @@ const Navbar = () => {
       <Link to="/home">
         <div className="flex items-center">
           <img
-            src={require("../../../assets/images/owl-cup.png")}
+            src={require("../../assets/images/owl-cup.png")}
             alt="owlpost"
             className="h-8 mr-2"
           />
           <img
             className="h-6 m-auto"
-            src={require("../../../assets/images/owl-post.png")}
+            src={require("../../assets/images/owl-post.png")}
             alt="owl post"
           />
         </div>

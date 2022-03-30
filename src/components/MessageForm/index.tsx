@@ -1,8 +1,10 @@
 import React, { useEffect, useState, FormEventHandler } from "react";
-import AttachmentBtn from "../../../assets/svg/AttachmentBtn";
-import Paperclip from "../../../assets/svg/Paperclip";
-import SendBtn from "../../../assets/svg/SendBtn";
-import TimesCircle from "../../../assets/svg/TimesCircle";
+import clsx from "clsx";
+
+import AttachmentBtn from "../../assets/svg/AttachmentBtn";
+import Paperclip from "../../assets/svg/Paperclip";
+import SendBtn from "../../assets/svg/SendBtn";
+import TimesCircle from "../../assets/svg/TimesCircle";
 
 type msgFormProps = {
   handleSubmit: FormEventHandler<HTMLFormElement>;
@@ -96,7 +98,17 @@ const MessageForm = ({
           />
         </div>
         <div className="w-1/12 text-center">
-          <SendBtn isDisabled={isDisabled} />
+          <button
+            disabled={isDisabled}
+            className={clsx(
+              "p-2 rounded-full cursor-pointer",
+              isDisabled
+                ? " border-gray-500 bg-gray-500"
+                : "bg-green-700 border-green-700"
+            )}
+          >
+            <SendBtn isDisabled={isDisabled} />
+          </button>
         </div>
       </form>
     </div>

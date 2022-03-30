@@ -70,7 +70,7 @@ const Login = () => {
           <div className="text-center">
             <img
               className="h-16 m-auto mb-2"
-              src={require("../../../assets/images/owl-post.png")}
+              src={require("../../assets/images/owl-post.png")}
               alt="owl post"
             />
             <h3 className="h3">Welcome Back!</h3>

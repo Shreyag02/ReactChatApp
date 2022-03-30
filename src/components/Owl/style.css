@@ -1,5 +1,5 @@
 .owl {
-  background-image: url("../../../assets/images/owl-login.png");
+  background-image: url("../../assets/images/owl-login.png");
 }
 .owl .hand {
   border-radius: 40px;
@@ -14,7 +14,7 @@
   transform: translateX(-42px) translateY(-15px) scale(0.7);
 }
 .owl .arms .arm {
-  background-image: url("../../../assets/images/owl-login-arm.png");
+  background-image: url("../../assets/images/owl-login-arm.png");
   transition: 0.3s ease-out;
 }
 .owl .arms .arm.password {

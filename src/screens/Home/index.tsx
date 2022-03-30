@@ -15,13 +15,13 @@ import {
 } from "firebase/firestore";
 import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 
-import Image from "../../../assets/images/avatar.png";
-import startOwl from "../../../assets/images/owl-cup.png";
+import Image from "../../assets/images/avatar.png";
+import startOwl from "../../assets/images/owl-cup.png";
 
-import User from "../../components/common/User";
-import MessageForm from "../../components/common/MessageForm";
+import User from "../../components/User";
+import MessageForm from "../../components/MessageForm";
 import CloseBtn from "../../assets/svg/CloseBtn";
-import Message from "../../components/common/Message";
+import Message from "../../components/Message";
 
 const Home = () => {
   const [users, setUsers] = useState<any>([]);
@@ -172,7 +172,9 @@ const Home = () => {
                     <p className="text-lg">{chat.name}</p>
                   </div>
                 </div>
-                <CloseBtn closeChat={closeChat} />
+                <button onClick={closeChat}>
+                  <CloseBtn />
+                </button>
               </div>
             </div>
             <div
