@@ -4,45 +4,18 @@ import { db } from "../../services/firebase";
 import { doc, onSnapshot } from "firebase/firestore";
 import Image from "../../assets/images/avatar.png";
 import Paperclip from "../../assets/svg/Paperclip";
+import { LastMsg, UserProps } from "../../utils/types";
 
 type userProps = {
-  user: {
-    avatar: string;
-    avatarPath: string;
-    createdAt: any;
-    email: string;
-    isOnline: boolean;
-    name: string;
-    uid: string | undefined;
-  };
-
+  user: UserProps;
   selectUser: Function;
   loggedInUser: string | undefined;
-
-  chat: {
-    avatar: string;
-    avatarPath: string;
-    createdAt: any;
-    email: string;
-    isOnline: boolean;
-    name: string;
-    uid: string | undefined;
-  };
-};
-
-type lastMsgProps = {
-  createdAt: any;
-  from: string;
-  media: string;
-  mediaSnap: string;
-  text: string;
-  to: string;
-  unread: boolean;
+  chat: UserProps;
 };
 
 const User = ({ user, selectUser, loggedInUser, chat }: userProps) => {
   const user2 = user.uid;
-  const [data, setData] = useState<lastMsgProps | any>();
+  const [data, setData] = useState<LastMsg | any>();
 
   useEffect(() => {
     if (user2 && loggedInUser) {

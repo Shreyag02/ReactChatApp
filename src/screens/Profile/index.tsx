@@ -12,6 +12,9 @@ import CameraBtn from "../../assets/svg/CameraBtn";
 import DeleteBtn from "../../assets/svg/DeleteBtn";
 import Image from "../../assets/images/avatar.png";
 
+import { useSelector } from "react-redux";
+import { RootState } from "../../store";
+
 const Profile = () => {
   const [avatar, setAvatar] = useState<any>("");
   const [user, setUser] = useState<any>();

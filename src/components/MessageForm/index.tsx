@@ -1,4 +1,4 @@
-import React, { useEffect, useState, FormEventHandler } from "react";
+import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 
 import AttachmentBtn from "../../assets/svg/AttachmentBtn";
@@ -6,13 +6,7 @@ import Paperclip from "../../assets/svg/Paperclip";
 import SendBtn from "../../assets/svg/SendBtn";
 import TimesCircle from "../../assets/svg/TimesCircle";
 
-type msgFormProps = {
-  handleSubmit: FormEventHandler<HTMLFormElement>;
-  text: string;
-  setText: Function;
-  setImg: Function;
-  img: File;
-};
+import { MessageFormProps } from "../../utils/types";
 
 const MessageForm = ({
   handleSubmit,
@@ -20,7 +14,7 @@ const MessageForm = ({
   setText,
   setImg,
   img,
-}: msgFormProps) => {
+}: MessageFormProps) => {
   const [isDisabled, setIsDisabled] = useState(true);
 
   const changeMsg = (e: React.ChangeEvent<HTMLInputElement>) => {

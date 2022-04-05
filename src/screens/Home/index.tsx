@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../../store";
+
 import { db, auth, storage } from "../../services/firebase";
 import {
   collection,
@@ -22,48 +25,53 @@ import User from "../../components/User";
 import MessageForm from "../../components/MessageForm";
 import CloseBtn from "../../assets/svg/CloseBtn";
 import Message from "../../components/Message";
+import { UserProps } from "../../utils/types";
+import {
+  getChatUsersFetch,
+  getChatUsersSuccess,
+} from "../../store/reducers/userReducer";
 
 const Home = () => {
-  const [users, setUsers] = useState<any>([]);
+  const dispatch = useDispatch();
+  const users = useSelector((state: RootState) => state.user.allUsers);
+
+  // const [users, setUsers] = useState<any>([]);
   const [chat, setChat] = useState<any>("");
   const [text, setText] = useState<string>("");
   const [img, setImg] = useState<any>("");
   const [msgs, setMsgs] = useState<[]>([]);
 
-  const user1 = auth.currentUser?.uid;
+  const loggedInUserUID = useSelector(
+    (state: RootState) => state.user.currentUser.uid
+  );
 
   useEffect(() => {
-    if (user1) {
-      const usersRef = collection(db, "users");
-      // create query object
-      const q = query(usersRef, where("uid", "not-in", [user1]));
-      // execute query
-      const unsub = onSnapshot(q, (querySnapshot) => {
-        let users: any = [];
+    console.log(loggedInUserUID);
+    dispatch(getChatUsersFetch({ loggedInUserUID }));
+    // const usersRef = collection(db, "users");
+    // // create query object
+    // const q = query(usersRef, where("uid", "not-in", [loggedInUserUID]));
+    // // execute query
+    // const unsub = onSnapshot(q, (querySnapshot) => {
+    //   let users: any = [];
 
-        querySnapshot.forEach((doc) => {
-          users.push(doc.data());
-        });
-        setUsers(users);
-      });
-      return () => unsub();
-    }
-  }, [user1]);
+    //   querySnapshot.forEach((doc) => {
+    //     users.push(doc.data());
+    //   });
+    //   dispatch(getChatUsersSuccess(users));
+    // });
+    // return () => unsub();
+  }, [loggedInUserUID, dispatch]);
 
-  const selectUser = async (user: {
-    avatar: string;
-    avatarPath: string;
-    createdAt: any;
-    email: string;
-    isOnline: boolean;
-    name: string;
-    uid: string | undefined;
-  }) => {
+  const selectUser = async (user: UserProps) => {
     setChat(user);
 
     const user2 = user.uid;
-    if (user1 && user2) {
-      const id = user1 > user2 ? `${user1 + user2}` : `${user2 + user1}`;
+    if (loggedInUserUID && user2) {
+      const id =
+        loggedInUserUID > user2
+          ? `${loggedInUserUID + user2}`
+          : `${user2 + loggedInUserUID}`;
 
       const msgsRef = collection(db, "messages", id, "chat");
 
@@ -80,7 +88,7 @@ const Home = () => {
       // get last message b/w logged in user and selected user
       const docSnap = await getDoc(doc(db, "lastMsg", id));
       // if last message exists and message is from selected user
-      if (docSnap.data() && docSnap.data()?.from !== user1) {
+      if (docSnap.data() && docSnap.data()?.from !== loggedInUserUID) {
         // update last message doc, set unread to false
         await updateDoc(doc(db, "lastMsg", id), { unread: false });
       }
@@ -95,8 +103,11 @@ const Home = () => {
     const user2 = chat.uid;
 
     // messages => id => chat =>addDoc
-    if (user1) {
-      const id = user1 > user2 ? `${user1 + user2}` : `${user2 + user1}`;
+    if (loggedInUserUID) {
+      const id =
+        loggedInUserUID > user2
+          ? `${loggedInUserUID + user2}`
+          : `${user2 + loggedInUserUID}`;
 
       let url, snap;
 
@@ -115,7 +126,7 @@ const Home = () => {
       }
       await addDoc(collection(db, "messages", id, "chat"), {
         text,
-        from: user1,
+        from: loggedInUserUID,
         to: user2,
         createdAt: Timestamp.fromDate(new Date()),
         media: url || "",
@@ -126,7 +137,7 @@ const Home = () => {
 
       await setDoc(doc(db, "lastMsg", id), {
         text,
-        from: user1,
+        from: loggedInUserUID,
         to: user2,
         createdAt: Timestamp.fromDate(new Date()),
         media: url || "",
@@ -142,15 +153,16 @@ const Home = () => {
   return (
     <div className="pt-16 pb-2 text-white flex h-screen">
       <div className="w-1/3 border-r border-gray-500">
-        {users.map((user: any) => (
-          <User
-            user={user}
-            key={user.uid}
-            selectUser={selectUser}
-            loggedInUser={user1}
-            chat={chat}
-          />
-        ))}
+        {users.length &&
+          users?.map((user: any) => (
+            <User
+              user={user}
+              key={user.uid}
+              selectUser={selectUser}
+              loggedInUser={loggedInUserUID}
+              chat={chat}
+            />
+          ))}
       </div>
       <div className="w-2/3">
         {chat ? (
@@ -183,7 +195,11 @@ const Home = () => {
             >
               {msgs.length
                 ? msgs.map((msg: any, index: any) => (
-                    <Message key={index} msg={msg} user1={user1} />
+                    <Message
+                      key={index}
+                      msg={msg}
+                      loggedInUser={loggedInUserUID}
+                    />
                   ))
                 : null}
             </div>

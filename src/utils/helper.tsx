@@ -1,4 +1,5 @@
 let errorMsg = "Error occured. Please try again";
+
 const handleError = ({ error }: any) => {
   console.log({ error });
   switch (error.code) {

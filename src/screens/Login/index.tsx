@@ -5,25 +5,19 @@ import InputField from "../../components/InputField";
 import Owl from "../../components/Owl";
 import { Link, useNavigate } from "react-router-dom";
 
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { doc, updateDoc } from "firebase/firestore";
-import { auth, db } from "../../services/firebase";
 import { handleError } from "../../utils/helper";
+import { LoginCredentials } from "../../utils/types";
+import { useDispatch } from "react-redux";
+import { emailLogInFetch } from "../../store/reducers/userReducer";
 
 const Login = () => {
   const [isFocused, setIsFocused] = useState(false);
   const changeOwl = () => setIsFocused(!isFocused);
 
-  type dataVal = {
-    email: string;
-    password: string;
-    error: string | null | unknown;
-    loading: boolean;
-  };
-
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const [data, setData] = useState<dataVal>({
+  const [data, setData] = useState<LoginCredentials>({
     email: "",
     password: "",
     error: null,
@@ -41,11 +35,7 @@ const Login = () => {
     }
 
     try {
-      const result = await signInWithEmailAndPassword(auth, email, password);
-
-      await updateDoc(doc(db, "users", result.user.uid), {
-        isOnline: true,
-      });
+      dispatch(emailLogInFetch({ email, password }));
       setData({
         email: "",
         password: "",

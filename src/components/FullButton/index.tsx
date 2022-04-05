@@ -1,16 +1,11 @@
-type Props = {
-  label: string;
-  type: "button" | "submit" | "reset" | undefined;
-  isDisabled?: boolean;
-  isDisabledTxt?: string;
-};
+import { FullButtonProps } from "../../utils/types";
 
 const FullButton = ({
   label,
   type,
   isDisabled = false,
   isDisabledTxt = "Loading...",
-}: Props) => {
+}: FullButtonProps) => {
   return (
     <button
       type={type}

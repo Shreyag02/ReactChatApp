@@ -1,19 +1,16 @@
 import { configureStore } from "@reduxjs/toolkit";
-import chatReducer from "./reducers/chatReducer";
-import lastMsgReducer from "./reducers/lastMsgReducer";
-import messageReducer from "./reducers/messageReducer";
-import selectedUserReducer from "./reducers/selectedUserReducer";
-import userReducer from "./reducers/userReducer";
+import rootReducer from "./reducers";
+import createSagaMiddleware from "redux-saga";
+import userSaga from "./sagas/saga";
+import logger from "redux-logger";
+
+const saga = createSagaMiddleware();
 
 export const store = configureStore({
-  reducer: {
-    chat: chatReducer,
-    lastMsg: lastMsgReducer,
-    message: messageReducer,
-    selectedUser: selectedUserReducer,
-    user: userReducer,
-  },
+  reducer: rootReducer,
+  middleware: [saga, logger],
 });
 
+saga.run(userSaga);
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

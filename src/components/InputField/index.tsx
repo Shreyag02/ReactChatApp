@@ -1,13 +1,5 @@
 import React from "react";
-type props = {
-  id: string;
-  placeholder: string;
-  type: string;
-  value: string;
-  handleOwl?: Function;
-  data: {};
-  setData: Function;
-};
+import { InputProps } from "../../utils/types";
 
 const InputField = ({
   id,
@@ -17,7 +9,7 @@ const InputField = ({
   value,
   data,
   setData,
-}: props) => {
+}: InputProps) => {
   const clicked = (e: React.FocusEvent<HTMLInputElement>) => {
     if (type === "password") {
       handleOwl && handleOwl();

@@ -1,31 +1,28 @@
 import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+
 import FullButton from "../../components/FullButton";
 import Social from "../../components/Social";
 import InputField from "../../components/InputField";
 import Owl from "../../components/Owl";
 
-import { Link, useNavigate } from "react-router-dom";
-
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc, Timestamp } from "firebase/firestore";
-import { auth, db } from "../../services/firebase";
 import { handleError } from "../../utils/helper";
+import { UserCredentials } from "../../utils/types";
+import { emailSignUpFetch } from "../../store/reducers/userReducer";
+import { RootState } from "../../store/reducers";
 
 const Signup = () => {
-  const [isFocused, setIsFocused] = useState(false);
-  const changeOwl = () => setIsFocused(!isFocused);
-
-  type dataVal = {
-    name: string;
-    email: string;
-    password: string;
-    error: any;
-    loading: boolean;
-  };
-
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [data, setData] = useState<dataVal>({
+  const { isLoading, currentUser }: any = useSelector(
+    (state: RootState) => state.user
+  );
+
+  const [isFocused, setIsFocused] = useState(false);
+  const changeOwl = () => setIsFocused(!isFocused);
+  const [data, setData] = useState<UserCredentials>({
     name: "",
     email: "",
     password: "",
@@ -34,6 +31,7 @@ const Signup = () => {
   });
 
   const { name, email, password, error, loading } = data;
+  useSelector((state: RootState) => console.log("signup", { state }));
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -42,21 +40,8 @@ const Signup = () => {
     if (!name || !email || !password) {
       setData({ ...data, error: "All fields are required" });
     }
-
     try {
-      const result = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-
-      await setDoc(doc(db, "users", result.user.uid), {
-        uid: result.user.uid,
-        name,
-        email,
-        createdAt: Timestamp.fromDate(new Date()),
-        isOnline: true,
-      });
+      dispatch(emailSignUpFetch({ name, email, password }));
 
       setData({
         name: "",
@@ -66,7 +51,10 @@ const Signup = () => {
         loading: false,
       });
 
-      navigate("/home");
+      if (!isLoading) {
+        console.log("i was successful", currentUser);
+        navigate("/home");
+      }
     } catch (error) {
       setData({ ...data, error: error, loading: false });
     }
