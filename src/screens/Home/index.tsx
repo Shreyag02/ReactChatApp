@@ -47,20 +47,20 @@ const Home = () => {
 
   useEffect(() => {
     console.log(loggedInUserUID);
-    dispatch(getChatUsersFetch({ loggedInUserUID }));
-    // const usersRef = collection(db, "users");
-    // // create query object
-    // const q = query(usersRef, where("uid", "not-in", [loggedInUserUID]));
-    // // execute query
-    // const unsub = onSnapshot(q, (querySnapshot) => {
-    //   let users: any = [];
+    // dispatch(getChatUsersFetch({ loggedInUserUID }));
+    const usersRef = collection(db, "users");
+    // create query object
+    const q = query(usersRef, where("uid", "not-in", [loggedInUserUID]));
+    // execute query
+    const unsub = onSnapshot(q, (querySnapshot) => {
+      let users: any = [];
 
-    //   querySnapshot.forEach((doc) => {
-    //     users.push(doc.data());
-    //   });
-    //   dispatch(getChatUsersSuccess(users));
-    // });
-    // return () => unsub();
+      querySnapshot.forEach((doc) => {
+        users.push(doc.data());
+      });
+      dispatch(getChatUsersSuccess(users));
+    });
+    return () => unsub();
   }, [loggedInUserUID, dispatch]);
 
   const selectUser = async (user: UserProps) => {

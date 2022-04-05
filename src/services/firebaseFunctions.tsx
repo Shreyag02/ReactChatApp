@@ -66,35 +66,24 @@ const firebaseUsers = async ({ loggedInUserUID }: any) => {
   // const usersRef = collection(db, "users");
   // // create query object
   // const q = query(usersRef, where("uid", "not-in", [loggedInUserUID]));
-  // return eventChannel((emmiter:any) => {
-  //   // execute query
-  //   const unsub = onSnapshot(q, (querySnapshot) => {
-  //     let updatedUsers: any = [];
+  //     const unsub = onSnapshot(q, (querySnapshot) => {
+  //     let users: any = [];
   //     querySnapshot.forEach((doc) => {
-  //       updatedUsers.push(doc.data());
+  //       users.push(doc.data());
   //     });
-  //     emmiter(updatedUsers)
-  //   return () => unsub();
-  // });
-
-  const usersRef = collection(db, "users");
-  // create query object
-  const q = query(usersRef, where("uid", "not-in", [loggedInUserUID]));
-  // execute query
-  let usersRes: any = [];
-  const unsub = onSnapshot(q, (querySnapshot) => {
-    let users: any = [];
-
-    querySnapshot.forEach((doc) => {
-      users.push(doc.data());
-    });
-    console.log({ users });
-    return users;
-    // dispatch(getChatUsersSuccess(users));
-  });
-  usersRes = unsub();
-  console.log({ usersRes });
-  return usersRes;
+  //   });
+  // return eventChannel();
 };
 
 export { signupWithEmailAndPassword, loginWithEmailAndPassword, firebaseUsers };
+// (emmiter:any) => {
+//   // execute query
+//   const unsub = onSnapshot(q, (querySnapshot) => {
+//     let updatedUsers: any = [];
+//     querySnapshot.forEach((doc) => {
+//       updatedUsers.push(doc.data());
+//     });
+//     emmiter(updatedUsers)
+
+//   return () => unsub();
+// });

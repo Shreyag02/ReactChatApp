@@ -1,4 +1,12 @@
-import { call, put, takeLatest, all, take } from "redux-saga/effects";
+import {
+  call,
+  put,
+  takeLatest,
+  all,
+  take,
+  cancelled,
+  close,
+} from "redux-saga/effects";
 import {
   signupWithEmailAndPassword,
   loginWithEmailAndPassword,
@@ -11,6 +19,7 @@ import {
   emailLogInFailure,
   getChatUsersFailure,
   getChatUsersSuccess,
+  getChatUsersFetch,
 } from "../../store/reducers/userReducer";
 
 function* emailSignup({ payload }) {
@@ -37,16 +46,16 @@ function* getChatUsers({ payload }) {
   try {
     const chatUsers = yield call(() => firebaseUsers(payload));
 
-    try {
-      while (true) {
-        const updatedUsers = yield take(chatUsers);
-        yield put(getChatUsersSuccess(updatedUsers));
-      }
-    } finally {
-      if (yield cancelled()) {
-        channel.close();
-      }
-    }
+    // try {
+    //   while (true) {
+    //     const updatedUsers = yield take(chatUsers);
+    //     yield put(getChatUsersSuccess(updatedUsers));
+    //   }
+    // } finally {
+    //   if (yield cancelled()) {
+    //     channel.close();
+    //   }
+    // }
 
     // yield put(getChatUsersSuccess(chatUsers));
   } catch (error) {
@@ -56,9 +65,9 @@ function* getChatUsers({ payload }) {
 
 const userSaga = function* userSaga() {
   yield all([
-    takeLatest("user/getChatUsersFetch", getChatUsers),
-    takeLatest("user/emailSignUpFetch", emailSignup),
-    takeLatest("user/emailLogInFetch", emailLogIn),
+    takeLatest(getChatUsersFetch, getChatUsers),
+    takeLatest(emailSignUpFetch, emailSignup),
+    takeLatest(emailLogInFetch, emailLogIn),
   ]);
 };
 
