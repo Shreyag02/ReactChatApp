@@ -1,57 +1,32 @@
 import React, { useState, useEffect } from "react";
-import { auth, storage, db } from "../../services/firebase";
-import {
-  ref,
-  getDownloadURL,
-  uploadBytes,
-  deleteObject,
-} from "firebase/storage";
-import { getDoc, doc, updateDoc } from "firebase/firestore";
 
 import CameraBtn from "../../assets/svg/CameraBtn";
 import DeleteBtn from "../../assets/svg/DeleteBtn";
 import Image from "../../assets/images/avatar.png";
 
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store";
+import {
+  deleteAvatarFetch,
+  updateAvatarFetch,
+} from "../../store/reducers/userReducer";
 
 const Profile = () => {
+  const dispatch = useDispatch();
   const [avatar, setAvatar] = useState<any>("");
-  const [user, setUser] = useState<any>();
   const [loader, setLoader] = useState(false);
+  const currentUser = useSelector((state: RootState) => state.user.currentUser);
 
   const updateAvatar = (e: any) => {
     setAvatar(e.target.files[0]);
   };
 
   useEffect(() => {
-    if (auth.currentUser)
-      getDoc(doc(db, "users", auth.currentUser.uid)).then((docSnap) => {
-        if (docSnap.exists()) setUser(docSnap.data());
-      });
-
     if (avatar) {
       setLoader(true);
       const uploadImg = async () => {
-        const imgRef = ref(
-          storage,
-          `avatar/${new Date().getTime()}-${avatar.name}`
-        );
-
         try {
-          if (user?.avatarPath) {
-            await deleteObject(ref(storage, user?.avatarPath));
-          }
-
-          const snap = await uploadBytes(imgRef, avatar);
-          const url = await getDownloadURL(ref(storage, snap.ref.fullPath));
-
-          if (auth.currentUser)
-            await updateDoc(doc(db, "users", auth.currentUser.uid), {
-              avatar: url,
-              avatarPath: snap.ref.fullPath,
-            });
-
+          dispatch(updateAvatarFetch({ avatar, currentUser }));
           setAvatar("");
           setTimeout(() => {
             setLoader(false);
@@ -62,27 +37,20 @@ const Profile = () => {
       };
       uploadImg();
     }
-    // eslint-disable-next-line
-  }, [avatar]);
+  }, [avatar, currentUser, dispatch]);
 
   const deleteImage = async () => {
     try {
       const confirm = window.confirm("Delete avatar?");
       if (confirm) {
-        await deleteObject(ref(storage, user.avatarPath));
-
-        if (auth.currentUser)
-          await updateDoc(doc(db, "users", auth.currentUser.uid), {
-            avatar: "",
-            avatarPath: "",
-          });
+        dispatch(deleteAvatarFetch({ currentUser }));
       }
     } catch (err) {
       console.log(err);
     }
   };
 
-  return user ? (
+  return currentUser ? (
     <div className="flex flex-col md:flex-row justify-center items-center h-screen">
       <div className="profileCard rounded-lg w-11/12 max-w-md p-5 md:py-12 md:px-7 text-white outline-none border-none">
         <div className="flex items-center justify-center flex-col">
@@ -96,7 +64,7 @@ const Profile = () => {
             ) : (
               <>
                 <img
-                  src={user?.avatar || Image}
+                  src={currentUser?.avatar || Image}
                   alt="avatar"
                   className="h-28 w-28 rounded-full border border-gray-500 transition-opacity"
                 />
@@ -104,7 +72,7 @@ const Profile = () => {
                   <label htmlFor="photo">
                     <CameraBtn />
                   </label>
-                  {user.avatar ? (
+                  {currentUser.avatar ? (
                     <span className="ml-2" onClick={deleteImage}>
                       <DeleteBtn />
                     </span>
@@ -122,12 +90,12 @@ const Profile = () => {
           </div>
 
           <div className="text_container text-center mt-3">
-            <h3 className="text-xl font-bold mb-1">{user.name}</h3>
-            <h3 className="text-lg ">{user.email}</h3>
+            <h3 className="text-xl font-bold mb-1">{currentUser.name}</h3>
+            <h3 className="text-lg ">{currentUser.email}</h3>
             <div className="border my-3 border-t-gray-500 w-full"></div>
             <h3 className="text-base ">
               {/* {console.log(user.createdAt.toDate().toUTCString())} */}
-              Joined on: {user.createdAt.toDate().toDateString()}
+              Joined on: {currentUser.createdAt.toDate().toDateString()}
             </h3>
           </div>
         </div>

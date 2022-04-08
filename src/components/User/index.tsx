@@ -1,10 +1,12 @@
 import clsx from "clsx";
-import React, { useState, useEffect } from "react";
-import { db } from "../../services/firebase";
-import { doc, onSnapshot } from "firebase/firestore";
+import React, { useEffect } from "react";
 import Image from "../../assets/images/avatar.png";
 import Paperclip from "../../assets/svg/Paperclip";
-import { LastMsg, UserProps } from "../../utils/types";
+import { UserProps } from "../../utils/types";
+
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../../store";
+import { getUserLastMsgFetch } from "../../store/reducers/chatReducer";
 
 type userProps = {
   user: UserProps;
@@ -13,23 +15,24 @@ type userProps = {
   chat: UserProps;
 };
 
+const calcChatId = ({ loggedInUser, user2 }: any) => {
+  const id =
+    loggedInUser > user2
+      ? `${loggedInUser + user2}`
+      : `${user2 + loggedInUser}`;
+  return id;
+};
 const User = ({ user, selectUser, loggedInUser, chat }: userProps) => {
+  const dispatch = useDispatch();
+
   const user2 = user.uid;
-  const [data, setData] = useState<LastMsg | any>();
+  const id = calcChatId({ loggedInUser, user2 });
+  const data = useSelector((state: RootState) => state.chat.lastMsg);
 
   useEffect(() => {
-    if (user2 && loggedInUser) {
-      const id =
-        loggedInUser > user2
-          ? `${loggedInUser + user2}`
-          : `${user2 + loggedInUser}`;
-      let unsub = onSnapshot(doc(db, "lastMsg", id), (doc) => {
-        setData(doc.data());
-      });
+    if (user2 && loggedInUser) dispatch(getUserLastMsgFetch(id));
+  }, [id, dispatch, loggedInUser, user2]);
 
-      return () => unsub();
-    }
-  }, [loggedInUser, user2]);
   return (
     <div
       className={clsx(

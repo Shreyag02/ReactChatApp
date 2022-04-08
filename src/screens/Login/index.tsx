@@ -1,16 +1,18 @@
 import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+
+import { handleError } from "../../utils/helper";
+import { LoginCredentials } from "../../utils/types";
+import { emailLogInFetch } from "../../store/reducers/userReducer";
+//components
 import FullButton from "../../components/FullButton";
 import Social from "../../components/Social";
 import InputField from "../../components/InputField";
 import Owl from "../../components/Owl";
-import { Link, useNavigate } from "react-router-dom";
-
-import { handleError } from "../../utils/helper";
-import { LoginCredentials } from "../../utils/types";
-import { useDispatch } from "react-redux";
-import { emailLogInFetch } from "../../store/reducers/userReducer";
 
 const Login = () => {
+  //local data
   const [isFocused, setIsFocused] = useState(false);
   const changeOwl = () => setIsFocused(!isFocused);
 
