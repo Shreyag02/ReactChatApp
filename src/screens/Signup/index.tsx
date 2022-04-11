@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -16,9 +16,13 @@ const Signup = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { isLoading, currentUser }: any = useSelector(
-    (state: RootState) => state.user
-  );
+  const { authData }: any = useSelector((state: RootState) => state.user);
+
+  useEffect(() => {
+    if (authData) {
+      navigate("/home");
+    }
+  }, [authData]);
 
   const [isFocused, setIsFocused] = useState(false);
   const changeOwl = () => setIsFocused(!isFocused);
@@ -50,11 +54,6 @@ const Signup = () => {
         error: null,
         loading: false,
       });
-
-      if (!isLoading) {
-        console.log("i was successful", currentUser);
-        navigate("/home");
-      }
     } catch (error) {
       setData({ ...data, error: error, loading: false });
     }

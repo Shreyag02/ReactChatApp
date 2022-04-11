@@ -71,7 +71,7 @@ const Home = () => {
   return (
     <div className="pt-16 pb-2 text-white flex h-screen">
       <div className="w-1/3 border-r border-gray-500">
-        {users.length &&
+        {users.length ? (
           users?.map((user: any) => (
             <User
               user={user}
@@ -80,7 +80,10 @@ const Home = () => {
               loggedInUser={loggedInUserUID}
               chat={chat}
             />
-          ))}
+          ))
+        ) : (
+          <p>Oops! No other users yet :(</p>
+        )}
       </div>
       <div className="w-2/3">
         {chat ? (

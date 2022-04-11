@@ -3,22 +3,16 @@ import { createSlice } from "@reduxjs/toolkit";
 import { UserProps } from "../../../utils/types";
 
 export interface StoreState {
-  currentUser: UserProps;
+  authData: any;
+  currentUser: UserProps | any;
   allUsers: UserProps[];
   error: any;
   isLoading: boolean;
 }
 
 const initialState: StoreState = {
-  currentUser: {
-    avatar: "",
-    avatarPath: "",
-    createdAt: null,
-    email: "",
-    isOnline: false,
-    name: "",
-    uid: "",
-  },
+  authData: "",
+  currentUser: "",
   allUsers: [],
   error: null,
   isLoading: false,
@@ -50,6 +44,36 @@ export const userSlice = createSlice({
     emailLogInFailure: (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
+    },
+
+    continueWithGoogleFetch: (state, action) => {
+      state.isLoading = true;
+    },
+    continueWithGoogleSuccess: (state, action) => {
+      state.currentUser = { ...action.payload };
+      state.isLoading = false;
+    },
+    continueWithGoogleFailure: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+
+    userLogoutFetch: (state, action) => {
+      state.isLoading = true;
+    },
+    userLogoutSuccess: (state, action) => {
+      state.currentUser = "";
+      state.authData = "";
+      state.isLoading = false;
+    },
+    userLogoutFailure: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+
+    userAuthSuccess: (state, action) => {
+      state.authData = action.payload;
+      state.isLoading = false;
     },
 
     getChatUsersFetch: (state, action) => {
@@ -103,6 +127,12 @@ export const {
   emailLogInSuccess,
   emailLogInFailure,
 
+  userLogoutFetch,
+  userLogoutSuccess,
+  userLogoutFailure,
+
+  userAuthSuccess,
+
   getChatUsersFetch,
   getChatUsersSuccess,
   getChatUsersFailure,
@@ -114,6 +144,10 @@ export const {
   deleteAvatarFetch,
   deleteAvatarSuccess,
   deleteAvatarFailure,
+
+  continueWithGoogleFetch,
+  continueWithGoogleSuccess,
+  continueWithGoogleFailure,
 } = userSlice.actions;
 
 export default userSlice.reducer;

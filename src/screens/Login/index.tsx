@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
@@ -10,6 +10,8 @@ import FullButton from "../../components/FullButton";
 import Social from "../../components/Social";
 import InputField from "../../components/InputField";
 import Owl from "../../components/Owl";
+import { RootState } from "../../store/reducers";
+import { useSelector } from "react-redux";
 
 const Login = () => {
   //local data
@@ -18,6 +20,14 @@ const Login = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const authData = useSelector((state: RootState) => state.user.authData);
+
+  useEffect(() => {
+    if (authData) {
+      navigate("/home");
+    }
+  }, [authData]);
 
   const [data, setData] = useState<LoginCredentials>({
     email: "",
@@ -38,13 +48,14 @@ const Login = () => {
 
     try {
       dispatch(emailLogInFetch({ email, password }));
+
+      console.log("running");
       setData({
         email: "",
         password: "",
         error: null,
         loading: false,
       });
-      navigate("/home");
     } catch (error) {
       setData({ ...data, error: error, loading: false });
     }

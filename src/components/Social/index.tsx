@@ -1,27 +1,17 @@
-import React from "react";
-// import { auth } from "../../../services/firebase";
-import { GoogleAuthProvider } from "firebase/auth";
-
-const signInWithGoogle = async () => {
-  const provider = new GoogleAuthProvider();
-  provider.addScope("profile");
-  provider.addScope("email");
-  // const result = await signInWithPopup(auth, provider);
-
-  // The signed-in user info.
-  // const user = result.user;
-  // This gives you a Google Access Token.
-  // const credential = GoogleAuthProvider.credentialFromResult(result);
-  // const token = credential?.accessToken;
-};
+import { useDispatch } from "react-redux";
+import { continueWithGoogleFetch } from "../../store/reducers/userReducer";
 
 const Social = () => {
+  const handleClick = () => {
+    dispatch(continueWithGoogleFetch({}));
+  };
+  const dispatch = useDispatch();
   return (
     <div>
       <div className="social my-5">
         <div
           className="w-full text-white font-bold text-center py-2.5 rounded"
-          onClick={signInWithGoogle}
+          onClick={handleClick}
         >
           Continue with Google
         </div>

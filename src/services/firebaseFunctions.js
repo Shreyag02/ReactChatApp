@@ -1,6 +1,9 @@
 import {
+  getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
 } from "firebase/auth";
 import {
   collection,
@@ -15,6 +18,8 @@ import {
   Timestamp,
   orderBy,
 } from "firebase/firestore";
+import { signOut } from "firebase/auth";
+
 import { auth, db, storage } from "./firebase";
 import { eventChannel } from "redux-saga";
 import {
@@ -27,7 +32,7 @@ import {
 const signupWithEmailAndPassword = async ({ email, password, name }) => {
   try {
     const result = await createUserWithEmailAndPassword(auth, email, password);
-
+    console.log("hey", auth.currentUser);
     const userData = {
       uid: result.user.uid,
       name,
@@ -37,10 +42,10 @@ const signupWithEmailAndPassword = async ({ email, password, name }) => {
       avatar: "",
       avatarPath: "",
     };
-
+    const authData = auth.currentUser;
     await setDoc(doc(db, "users", result.user.uid), userData);
-
-    return userData;
+    console.log("currnet data", { userData, authData });
+    return { userData, authData };
   } catch (error) {
     return error;
   }
@@ -49,22 +54,86 @@ const signupWithEmailAndPassword = async ({ email, password, name }) => {
 const loginWithEmailAndPassword = async ({ email, password }) => {
   try {
     const result = await signInWithEmailAndPassword(auth, email, password);
+    console.log("hey", auth.currentUser);
 
     await updateDoc(doc(db, "users", result.user.uid), {
       isOnline: true,
     });
-
-    const loggedInUser = await getDoc(doc(db, "users", result.user.uid)).then(
+    const authData = auth.currentUser;
+    //store result as auth
+    console.log({ result });
+    const userData = await getDoc(doc(db, "users", result.user.uid)).then(
       (docSnap) => {
         if (docSnap.exists()) {
           return docSnap.data();
         }
       }
     );
-    return loggedInUser;
+    console.log("currnet data", { userData, authData });
+
+    return { userData, authData };
   } catch (error) {
     return error;
   }
+};
+
+const fun = async ({ authData }) => {
+  let tempData = await getDoc(doc(db, "users", authData.uid)).then(
+    (docSnap) => {
+      if (docSnap.exists()) {
+        return docSnap.data();
+      } else {
+        const temp = {
+          uid: authData.uid,
+          name: authData.displayName,
+          email: authData.email,
+          createdAt: Timestamp.fromDate(new Date()),
+          isOnline: true,
+          avatar: "",
+          avatarPath: "",
+        };
+        setDoc(doc(db, "users", authData.uid), temp);
+        return temp;
+      }
+    }
+  );
+  return tempData;
+};
+
+const signInWithGoogle = async ({ payload }) => {
+  const provider = new GoogleAuthProvider();
+  const auth = getAuth();
+  const data = await signInWithPopup(auth, provider)
+    .then(async (result) => {
+      // This gives you a Google Access Token. You can use it to access the Google API.
+      // const credential = GoogleAuthProvider.credentialFromResult(result);
+      // const token = credential.accessToken;
+      // The signed-in user info.
+      const authData = result.user;
+      let userData = await fun({ authData });
+      return { userData, authData };
+    })
+    .catch((error) => {
+      // // Handle Errors here.
+      // const errorCode = error.code;
+      // const errorMessage = error.message;
+      // // The email of the user's account used.
+      // const email = error.email;
+      // // The AuthCredential type that was used.
+      // const credential = GoogleAuthProvider.credentialFromError(error);
+
+      return error;
+    });
+
+  return data;
+};
+
+const logout = async () => {
+  if (auth.currentUser)
+    await updateDoc(doc(db, "users", auth.currentUser?.uid), {
+      isOnline: false,
+    });
+  await signOut(auth);
 };
 
 const firebaseUsers = async ({ loggedInUserUID }) => {
@@ -248,4 +317,6 @@ export {
   deleteUserAvatar,
   updateUserAvatar,
   getUserLastMsg,
+  logout,
+  signInWithGoogle,
 };

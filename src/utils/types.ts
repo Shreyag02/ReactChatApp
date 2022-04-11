@@ -8,6 +8,28 @@ interface UserProps {
   uid: string | undefined;
 }
 
+interface IDecodedObject {
+  at_hash?: string;
+  aud?: string;
+  azp?: string;
+  email: string;
+  email_verified: boolean;
+  exp?: number;
+  family_name: string;
+  given_name: string;
+  iat?: number;
+  iss?: string;
+  jti?: string;
+  locale?: string;
+  name: string;
+  picture: string;
+  sub: string;
+}
+
+interface IState {
+  auth: { data: IDecodedObject; isLoggedIn: boolean };
+}
+
 interface UserCredentials {
   name: string;
   email: string;
@@ -76,4 +98,6 @@ export type {
   MessageValProps,
   MessageFormProps,
   LastMsg,
+  IDecodedObject,
+  IState,
 };

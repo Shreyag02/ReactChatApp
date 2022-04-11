@@ -12,6 +12,8 @@ import {
   firebaseUsers,
   deleteUserAvatar,
   updateUserAvatar,
+  logout,
+  signInWithGoogle,
 } from "../../../services/firebaseFunctions";
 import {
   emailSignUpFetch,
@@ -29,6 +31,13 @@ import {
   updateAvatarFailure,
   updateAvatarFetch,
   updateAvatarSuccess,
+  userAuthSuccess,
+  userLogoutFetch,
+  userLogoutFailure,
+  userLogoutSuccess,
+  continueWithGoogleFetch,
+  continueWithGoogleSuccess,
+  continueWithGoogleFailure,
 } from "../../reducers/userReducer";
 
 function* deleteAvatarSaga({ payload }: any): Generator<any> {
@@ -60,9 +69,10 @@ function* emailSignup({ payload }: any): Generator<
   unknown
 > {
   try {
-    const user = yield signupWithEmailAndPassword(payload);
+    const data: any = yield signupWithEmailAndPassword(payload);
 
-    yield put(emailSignUpSuccess(user));
+    yield put(userAuthSuccess(data?.authData));
+    yield put(emailSignUpSuccess(data?.userData));
   } catch (error) {
     yield put(emailSignUpFailure(error));
   }
@@ -78,11 +88,35 @@ function* emailLogIn({ payload }: any): Generator<
   unknown
 > {
   try {
-    const user = yield loginWithEmailAndPassword(payload);
+    const data: any = yield loginWithEmailAndPassword(payload);
 
-    yield put(emailLogInSuccess(user));
+    yield put(userAuthSuccess(data?.authData));
+    yield put(emailLogInSuccess(data?.userData));
   } catch (error) {
     yield put(emailLogInFailure(error));
+  }
+}
+
+function* googleSaga({ payload }: any): Generator<
+  | Promise<any>
+  | PutEffect<{
+      payload: any;
+      type: string;
+    }>,
+  void,
+  unknown
+> {
+  try {
+    const data: any = yield signInWithGoogle(payload);
+    if (data) {
+      console.log("google saga", data);
+      yield put(userAuthSuccess(data?.authData));
+      yield put(continueWithGoogleSuccess(data?.userData));
+    } else {
+      console.log("waiting");
+    }
+  } catch (error) {
+    yield put(continueWithGoogleFailure(error));
   }
 }
 
@@ -107,12 +141,23 @@ function* getChatUsers({ payload }: any): Generator<any, void, unknown> {
   }
 }
 
+function* logoutSaga({ payload }: any): Generator<any, void, unknown> {
+  try {
+    yield logout();
+    yield put(userLogoutSuccess(true));
+  } catch (error) {
+    yield put(userLogoutFailure(error));
+  }
+}
+
 const userSaga = [
   takeLatest(getChatUsersFetch, getChatUsers),
   takeLatest(emailSignUpFetch, emailSignup),
   takeLatest(emailLogInFetch, emailLogIn),
   takeLatest(deleteAvatarFetch, deleteAvatarSaga),
   takeLatest(updateAvatarFetch, updateAvatarSaga),
+  takeLatest(userLogoutFetch, logoutSaga),
+  takeLatest(continueWithGoogleFetch, googleSaga),
 ];
 
 export default userSaga;

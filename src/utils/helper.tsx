@@ -1,3 +1,6 @@
+import jwt_decode from "jwt-decode";
+import { IDecodedObject } from "./types";
+
 let errorMsg = "Error occured. Please try again";
 
 const handleError = ({ error }: any) => {
@@ -33,6 +36,18 @@ const handleError = ({ error }: any) => {
   return (
     <p className="text-red-700 font-bold -mt-2 mb-2 text-center">{errorMsg}</p>
   );
+};
+
+export function clearLocalStorage() {
+  localStorage.removeItem("userId");
+  localStorage.removeItem("token");
+  localStorage.removeItem("currentTab");
+}
+
+export const getDecodedToken = () => {
+  const token = localStorage.getItem("token") as string;
+  const decoded: IDecodedObject = jwt_decode(token as string);
+  return decoded;
 };
 
 export { handleError };

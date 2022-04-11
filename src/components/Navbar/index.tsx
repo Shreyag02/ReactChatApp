@@ -1,34 +1,19 @@
-import React, { useContext, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { auth, db } from "../../services/firebase";
-import { signOut } from "firebase/auth";
-import { doc, updateDoc, getDoc } from "firebase/firestore";
-import { AuthContext } from "../../context/auth";
 import ProfileLogo from "../../assets/svg/ProfileLogo";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../../store/reducers";
+import { userLogoutFetch } from "../../store/reducers/userReducer";
 
 const Navbar = () => {
-  const { user } = useContext(AuthContext);
-  const [userName, setUserName] = useState<string>("");
-
-  useEffect(() => {
-    if (auth.currentUser)
-      getDoc(doc(db, "users", auth.currentUser.uid)).then((docSnap) => {
-        if (docSnap.exists()) {
-          setUserName(docSnap.data().name);
-        }
-      });
-    // eslint-disable-next-line
-  }, [auth.currentUser]);
+  let currentUser = useSelector(
+    (state: RootState) => state.user.currentUser.name
+  );
 
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const handleSignout = async () => {
-    if (auth.currentUser)
-      await updateDoc(doc(db, "users", auth.currentUser?.uid), {
-        isOnline: false,
-      });
-    setUserName("");
-    await signOut(auth);
+    dispatch(userLogoutFetch({}));
+
     navigate("/login");
   };
 
@@ -49,14 +34,14 @@ const Navbar = () => {
         </div>
       </Link>
       <div>
-        {user ? (
+        {currentUser ? (
           <div className="flex items-center">
             <Link
               to="/profile"
               className="mr-4 border border-gray-600 px-2 py-1 rounded-sm flex items-center"
             >
               <ProfileLogo />
-              {userName}
+              {currentUser}
             </Link>
             <button
               className="bg-gray-600 px-3 py-1 rounded-sm"
