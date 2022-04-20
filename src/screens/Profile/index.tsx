@@ -14,8 +14,9 @@ import {
 const Profile = () => {
   const dispatch = useDispatch();
   const [avatar, setAvatar] = useState<any>("");
-  const [loader, setLoader] = useState(false);
-  const currentUser = useSelector((state: RootState) => state.user.currentUser);
+  const { currentUser, isLoading } = useSelector(
+    (state: RootState) => state.user
+  );
 
   const updateAvatar = (e: any) => {
     setAvatar(e.target.files[0]);
@@ -23,14 +24,10 @@ const Profile = () => {
 
   useEffect(() => {
     if (avatar) {
-      setLoader(true);
       const uploadImg = async () => {
         try {
           dispatch(updateAvatarFetch({ avatar, currentUser }));
           setAvatar("");
-          setTimeout(() => {
-            setLoader(false);
-          }, 1000);
         } catch (error) {
           console.log(error);
         }
@@ -55,7 +52,7 @@ const Profile = () => {
       <div className="profileCard rounded-lg w-11/12 max-w-md p-5 md:py-12 md:px-7 text-white outline-none border-none">
         <div className="flex items-center justify-center flex-col">
           <div className="img_container relative  cursor-pointer flex justify-center">
-            {loader ? (
+            {isLoading ? (
               <img
                 src={require("../../assets/images/loading.gif")}
                 alt="loading..."

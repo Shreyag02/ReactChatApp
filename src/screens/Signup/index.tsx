@@ -20,8 +20,11 @@ const Signup = () => {
 
   useEffect(() => {
     if (authData) {
+      // localStorage.setItem("authData", JSON.stringify(authData));
+
       navigate("/home");
     }
+    // eslint-disable-next-line
   }, [authData]);
 
   const [isFocused, setIsFocused] = useState(false);
@@ -35,7 +38,7 @@ const Signup = () => {
   });
 
   const { name, email, password, error, loading } = data;
-  useSelector((state: RootState) => console.log("signup", { state }));
+  // useSelector((state: RootState) => console.log("signup", { state }));
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();

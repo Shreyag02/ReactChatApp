@@ -4,6 +4,9 @@ import {
   signInWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithPopup,
+  setPersistence,
+  browserSessionPersistence,
+  signOut,
 } from "firebase/auth";
 import {
   collection,
@@ -18,8 +21,6 @@ import {
   Timestamp,
   orderBy,
 } from "firebase/firestore";
-import { signOut } from "firebase/auth";
-
 import { auth, db, storage } from "./firebase";
 import { eventChannel } from "redux-saga";
 import {
@@ -31,7 +32,11 @@ import {
 
 const signupWithEmailAndPassword = async ({ email, password, name }) => {
   try {
-    const result = await createUserWithEmailAndPassword(auth, email, password);
+    const result = await setPersistence(auth, browserSessionPersistence).then(
+      async () => {
+        return await createUserWithEmailAndPassword(auth, email, password);
+      }
+    );
     console.log("hey", auth.currentUser);
     const userData = {
       uid: result.user.uid,
@@ -53,8 +58,12 @@ const signupWithEmailAndPassword = async ({ email, password, name }) => {
 
 const loginWithEmailAndPassword = async ({ email, password }) => {
   try {
-    const result = await signInWithEmailAndPassword(auth, email, password);
-    console.log("hey", auth.currentUser);
+    const result = await setPersistence(auth, browserSessionPersistence).then(
+      async () => {
+        return await signInWithEmailAndPassword(auth, email, password);
+      }
+    );
+    console.log("hey there1234567890", result);
 
     await updateDoc(doc(db, "users", result.user.uid), {
       isOnline: true,
@@ -103,15 +112,17 @@ const fun = async ({ authData }) => {
 const signInWithGoogle = async ({ payload }) => {
   const provider = new GoogleAuthProvider();
   const auth = getAuth();
-  const data = await signInWithPopup(auth, provider)
-    .then(async (result) => {
-      // This gives you a Google Access Token. You can use it to access the Google API.
-      // const credential = GoogleAuthProvider.credentialFromResult(result);
-      // const token = credential.accessToken;
-      // The signed-in user info.
-      const authData = result.user;
-      let userData = await fun({ authData });
-      return { userData, authData };
+  const data = await setPersistence(auth, browserSessionPersistence)
+    .then(async () => {
+      return await signInWithPopup(auth, provider).then(async (result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        // const credential = GoogleAuthProvider.credentialFromResult(result);
+        // const token = credential.accessToken;
+        // The signed-in user info.
+        const authData = result.user;
+        let userData = await fun({ authData });
+        return { userData, authData };
+      });
     })
     .catch((error) => {
       // // Handle Errors here.
@@ -234,18 +245,6 @@ const getUserLastMsg = async ({ id }) => {
     return error;
   }
 };
-
-// if (user2 && loggedInUser) {
-//   const id =
-//     loggedInUser > user2
-//       ? `${loggedInUser + user2}`
-//       : `${user2 + loggedInUser}`;
-//   let unsub = onSnapshot(doc(db, "lastMsg", id), (doc) => {
-//     setData(doc.data());
-//   });
-
-//   return () => unsub();
-// }
 
 const lastMsgStatus = async ({ id, loggedInUserUID }) => {
   try {

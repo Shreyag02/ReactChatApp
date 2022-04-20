@@ -21,29 +21,42 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const authData = useSelector((state: RootState) => state.user.authData);
+  const { authData, isLoading, error } = useSelector(
+    (state: RootState) => state.user
+  );
+  const [sessionData, setSessionData] = useState<any>();
 
   useEffect(() => {
+    setSessionData(
+      sessionStorage.getItem(
+        `firebase:authUser:${process.env.REACT_APP_API_KEY}:[DEFAULT]`
+      )
+    );
+    if (sessionData) console.log("hello", JSON.parse(sessionData));
+
     if (authData) {
+      // localStorage.setItem("authData", JSON.stringify(authData));
+
       navigate("/home");
     }
-  }, [authData]);
+    // eslint-disable-next-line
+  }, [authData, sessionData]);
 
   const [data, setData] = useState<LoginCredentials>({
     email: "",
     password: "",
-    error: null,
-    loading: false,
   });
 
-  const { email, password, error, loading } = data;
+  const { email, password } = data;
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
-    setData({ ...data, error: null, loading: true });
+    setData({ ...data });
     if (!email || !password) {
-      setData({ ...data, error: "All fields are required" });
+      setData({
+        ...data,
+      });
     }
 
     try {
@@ -53,11 +66,11 @@ const Login = () => {
       setData({
         email: "",
         password: "",
-        error: null,
-        loading: false,
       });
     } catch (error) {
-      setData({ ...data, error: error, loading: false });
+      setData({
+        ...data,
+      });
     }
   };
 
@@ -100,10 +113,11 @@ const Login = () => {
             setData={setData}
           />
           {error ? handleError({ error }) : null}
+          {error && console.log(error)}
           <FullButton
             label="Login"
             type="submit"
-            isDisabled={loading}
+            isDisabled={isLoading}
             isDisabledTxt="Logging in..."
           />
 

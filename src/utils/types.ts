@@ -41,8 +41,8 @@ interface UserCredentials {
 interface LoginCredentials {
   email: string;
   password: string;
-  error: any;
-  loading: boolean;
+  // error: any;
+  // loading: boolean;
 }
 
 interface FullButtonProps {
