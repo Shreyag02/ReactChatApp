@@ -32,7 +32,6 @@ const firebaseConfig: firebaseConfigValues = {
   appId: process.env.REACT_APP_APP_ID as string,
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 // const analytics = getAnalytics(app);
 const auth = getAuth(app);
