@@ -37,7 +37,6 @@ const Home = () => {
   const [img, setImg] = useState<File | any>(null);
 
   useEffect(() => {
-    console.log(loggedInUserUID);
     dispatch(getChatUsersFetch({ loggedInUserUID }));
   }, [loggedInUserUID, dispatch]);
 

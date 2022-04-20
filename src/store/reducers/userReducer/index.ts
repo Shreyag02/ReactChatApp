@@ -22,6 +22,17 @@ export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
+    initialLoadFetch: (state, action) => {
+      state.isLoading = true;
+    },
+    initialLoadSuccess: (state, action) => {
+      state.currentUser = { ...action.payload };
+      state.isLoading = false;
+    },
+    initialLoadFailure: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
     emailSignUpFetch: (state, action) => {
       state.isLoading = true;
     },
@@ -119,6 +130,10 @@ export const userSlice = createSlice({
 });
 
 export const {
+  initialLoadFetch,
+  initialLoadSuccess,
+  initialLoadFailure,
+
   emailSignUpFetch,
   emailSignUpSuccess,
   emailSignUpFailure,

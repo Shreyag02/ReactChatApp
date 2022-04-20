@@ -14,6 +14,7 @@ import {
   updateUserAvatar,
   logout,
   signInWithGoogle,
+  reloadFirebaseData,
 } from "../../../services/firebaseFunctions";
 import {
   emailSignUpFetch,
@@ -38,6 +39,9 @@ import {
   continueWithGoogleFetch,
   continueWithGoogleSuccess,
   continueWithGoogleFailure,
+  initialLoadFetch,
+  initialLoadFailure,
+  initialLoadSuccess,
 } from "../../reducers/userReducer";
 
 function* deleteAvatarSaga({ payload }: any): Generator<any> {
@@ -109,11 +113,9 @@ function* googleSaga({ payload }: any): Generator<
   try {
     const data: any = yield signInWithGoogle(payload);
     if (data) {
-      console.log("google saga", data);
       yield put(userAuthSuccess(data?.authData));
       yield put(continueWithGoogleSuccess(data?.userData));
     } else {
-      console.log("waiting");
     }
   } catch (error) {
     yield put(continueWithGoogleFailure(error));
@@ -130,8 +132,6 @@ function* getChatUsers({ payload }: any): Generator<any, void, unknown> {
         yield put(getChatUsersSuccess(updatedUsers));
       }
     } finally {
-      console.log("unsubscribe");
-
       if (yield cancelled()) {
         chatUsers.close();
       }
@@ -150,8 +150,28 @@ function* logoutSaga({ payload }: any): Generator<any, void, unknown> {
   }
 }
 
+function* reloadDataSaga({ payload }: any): Generator<
+  | Promise<any>
+  | PutEffect<{
+      payload: any;
+      type: string;
+    }>,
+  void,
+  unknown
+> {
+  try {
+    const data: any = yield reloadFirebaseData(payload);
+
+    yield put(userAuthSuccess(data?.authData));
+    yield put(initialLoadSuccess(data?.userData));
+  } catch (error) {
+    yield put(initialLoadFailure(error));
+  }
+}
+
 const userSaga = [
   takeLatest(getChatUsersFetch, getChatUsers),
+  takeLatest(initialLoadFetch, reloadDataSaga),
   takeLatest(emailSignUpFetch, emailSignup),
   takeLatest(emailLogInFetch, emailLogIn),
   takeLatest(deleteAvatarFetch, deleteAvatarSaga),

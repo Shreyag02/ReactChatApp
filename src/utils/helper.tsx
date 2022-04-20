@@ -4,7 +4,6 @@ import { IDecodedObject } from "./types";
 let errorMsg = "Error occured. Please try again";
 
 const handleError = ({ error }: any) => {
-  console.log({ error });
   switch (error.code) {
     case "auth/wrong-password":
       errorMsg = "wrong password";

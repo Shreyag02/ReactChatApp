@@ -13,7 +13,7 @@ export interface ChatState {
 const initialState: ChatState = {
   selectedChatUser: "",
   selectedChatMessages: [],
-  lastMsg: {},
+  lastMsg: null,
   error: null,
   isLoading: false,
 };
@@ -50,7 +50,10 @@ export const chatSlice = createSlice({
       state.isLoading = true;
     },
     getUserLastMsgSuccess: (state, action) => {
-      state.lastMsg = action.payload;
+      state.lastMsg = {
+        ...state.lastMsg,
+        ...action.payload,
+      };
       state.isLoading = false;
     },
     getUserLastMsgFailure: (state, action) => {

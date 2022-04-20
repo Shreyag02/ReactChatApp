@@ -1,12 +1,11 @@
 import clsx from "clsx";
-import React, { useEffect } from "react";
 import Image from "../../assets/images/avatar.png";
 import Paperclip from "../../assets/svg/Paperclip";
 import { UserProps } from "../../utils/types";
 
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "../../store";
-import { getUserLastMsgFetch } from "../../store/reducers/chatReducer";
+// import { getUserLastMsgFetch } from "../../store/reducers/chatReducer";
 
 type userProps = {
   user: UserProps;
@@ -15,23 +14,30 @@ type userProps = {
   chat: UserProps;
 };
 
-const calcChatId = ({ loggedInUser, user2 }: any) => {
-  const id =
-    loggedInUser > user2
-      ? `${loggedInUser + user2}`
-      : `${user2 + loggedInUser}`;
-  return id;
-};
-const User = ({ user, selectUser, loggedInUser, chat }: userProps) => {
-  const dispatch = useDispatch();
+// const calcChatId = ({ loggedInUser, user2 }: any) => {
+//   const id =
+//     loggedInUser > user2
+//       ? `${loggedInUser + user2}`
+//       : `${user2 + loggedInUser}`;
+//   return id;
+// };
 
+const User = ({ user, selectUser, loggedInUser, chat }: userProps) => {
   const user2 = user.uid;
-  const id = calcChatId({ loggedInUser, user2 });
+  // const id = calcChatId({ loggedInUser, user2 });
   const data = useSelector((state: RootState) => state.chat.lastMsg);
 
-  useEffect(() => {
-    if (user2 && loggedInUser) dispatch(getUserLastMsgFetch(id));
-  }, [id, dispatch, loggedInUser, user2]);
+  // console.log(
+  //   "from user",
+  //   useSelector((state: RootState) => state.chat.lastMsg)
+  // );
+
+  // useEffect(() => {
+  //   if (user2 && loggedInUser) {
+  //     console.log("user2 && loggedInUser", { id, data });
+  //     dispatch(getUserLastMsgFetch({ id, data }));
+  //   }
+  // }, [id, dispatch, loggedInUser, user2]);
 
   return (
     <div

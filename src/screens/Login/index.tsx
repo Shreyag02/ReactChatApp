@@ -24,15 +24,14 @@ const Login = () => {
   const { authData, isLoading, error } = useSelector(
     (state: RootState) => state.user
   );
-  const [sessionData, setSessionData] = useState<any>();
+  // const [sessionData, setSessionData] = useState<any>();
 
   useEffect(() => {
-    setSessionData(
-      sessionStorage.getItem(
-        `firebase:authUser:${process.env.REACT_APP_API_KEY}:[DEFAULT]`
-      )
-    );
-    if (sessionData) console.log("hello", JSON.parse(sessionData));
+    // setSessionData(
+    //   sessionStorage.getItem(
+    //     `firebase:authUser:${process.env.REACT_APP_API_KEY}:[DEFAULT]`
+    //   )
+    // );
 
     if (authData) {
       // localStorage.setItem("authData", JSON.stringify(authData));
@@ -40,7 +39,7 @@ const Login = () => {
       navigate("/home");
     }
     // eslint-disable-next-line
-  }, [authData, sessionData]);
+  }, [authData]);
 
   const [data, setData] = useState<LoginCredentials>({
     email: "",
@@ -62,7 +61,6 @@ const Login = () => {
     try {
       dispatch(emailLogInFetch({ email, password }));
 
-      console.log("running");
       setData({
         email: "",
         password: "",

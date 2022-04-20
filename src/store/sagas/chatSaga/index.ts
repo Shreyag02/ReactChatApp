@@ -34,18 +34,18 @@ function* getChatMessages({ payload }: any): Generator<any, void, unknown> {
 function* getUserLastMsgSaga({ payload }: any): Generator<any, void, unknown> {
   try {
     const lastMsg: any = yield call(getUserLastMsg, payload);
+    yield put(getUserLastMsgSuccess(lastMsg));
+    // try {
+    //   while (true) {
+    //     const updatedLastMsgs = yield take(lastMsg);
 
-    try {
-      while (true) {
-        const updatedLastMsgs = yield take(lastMsg);
-
-        yield put(getUserLastMsgSuccess(updatedLastMsgs));
-      }
-    } finally {
-      if (yield cancelled()) {
-        lastMsg.close();
-      }
-    }
+    //     yield put(getUserLastMsgSuccess(updatedLastMsgs));
+    //   }
+    // } finally {
+    //   if (yield cancelled()) {
+    //     lastMsg.close();
+    //   }
+    // }
   } catch (error) {
     yield put(getUserLastMsgFailure(error));
   }

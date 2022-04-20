@@ -38,7 +38,6 @@ const Signup = () => {
   });
 
   const { name, email, password, error, loading } = data;
-  // useSelector((state: RootState) => console.log("signup", { state }));
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();

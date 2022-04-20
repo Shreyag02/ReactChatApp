@@ -37,7 +37,7 @@ const signupWithEmailAndPassword = async ({ email, password, name }) => {
         return await createUserWithEmailAndPassword(auth, email, password);
       }
     );
-    console.log("hey", auth.currentUser);
+
     const userData = {
       uid: result.user.uid,
       name,
@@ -49,8 +49,19 @@ const signupWithEmailAndPassword = async ({ email, password, name }) => {
     };
     const authData = auth.currentUser;
     await setDoc(doc(db, "users", result.user.uid), userData);
-    console.log("currnet data", { userData, authData });
     return { userData, authData };
+  } catch (error) {
+    return error;
+  }
+};
+
+const reloadFirebaseData = async (sessionData) => {
+  try {
+    let userData = await getDoc(doc(db, "users", sessionData.uid)).then(
+      (docSnap) => docSnap.data()
+    );
+
+    return { authData: sessionData, userData };
   } catch (error) {
     return error;
   }
@@ -63,14 +74,12 @@ const loginWithEmailAndPassword = async ({ email, password }) => {
         return await signInWithEmailAndPassword(auth, email, password);
       }
     );
-    console.log("hey there1234567890", result);
 
     await updateDoc(doc(db, "users", result.user.uid), {
       isOnline: true,
     });
     const authData = auth.currentUser;
     //store result as auth
-    console.log({ result });
     const userData = await getDoc(doc(db, "users", result.user.uid)).then(
       (docSnap) => {
         if (docSnap.exists()) {
@@ -78,7 +87,6 @@ const loginWithEmailAndPassword = async ({ email, password }) => {
         }
       }
     );
-    console.log("currnet data", { userData, authData });
 
     return { userData, authData };
   } catch (error) {
@@ -120,6 +128,9 @@ const signInWithGoogle = async ({ payload }) => {
         // const token = credential.accessToken;
         // The signed-in user info.
         const authData = result.user;
+        console.log("line 124", authData);
+        localStorage.setItem("token", authData.accessToken);
+        localStorage.setItem("userId", authData.uid);
         let userData = await fun({ authData });
         return { userData, authData };
       });
@@ -144,6 +155,8 @@ const logout = async () => {
     await updateDoc(doc(db, "users", auth.currentUser?.uid), {
       isOnline: false,
     });
+  localStorage.clear();
+  sessionStorage.clear();
   await signOut(auth);
 };
 
@@ -215,7 +228,6 @@ const addNewMsg = async ({ loggedInUserUID, chatUserUID, img, text }) => {
     });
 
     //setdoc will look for doc id, if it exists it will replace the existing doc, otherwise new doc will be created
-
     await setDoc(doc(db, "lastMsg", id), {
       text,
       from: loggedInUserUID,
@@ -231,17 +243,28 @@ const addNewMsg = async ({ loggedInUserUID, chatUserUID, img, text }) => {
   }
 };
 
-const getUserLastMsg = async ({ id }) => {
+const getUserLastMsg = async ({ id, data }) => {
   try {
-    return eventChannel((emitter) => {
-      const unsub = onSnapshot(doc(db, "lastMsg", id), (doc) => {
-        console.log({ id, data: doc.data() });
-        let lastMsg = doc.data;
-        emitter(lastMsg);
-      });
-      return () => unsub();
+    let lastMsg = {
+      hi: "test",
+    };
+    onSnapshot(doc(db, "lastMsg", id), (doc) => {
+      if (doc.exists()) return (lastMsg[`${id}`] = doc.data());
+      else return (lastMsg[`${id}`] = null);
     });
   } catch (error) {
+    // return eventChannel((emitter) => {
+    //   let lastMsg = {
+    //     hi: "test",
+    //   };
+    //   const unsub = onSnapshot(doc(db, "lastMsg", id), (doc) => {
+    //     if (doc.exists()) lastMsg[`${id}`] = doc.data();
+    //     else lastMsg[`${id}`] = null;
+    //     console.log(`from firebase func`, lastMsg);
+    //     emitter(lastMsg);
+    //   });
+    //   return () => unsub();
+    // });
     return error;
   }
 };
@@ -292,7 +315,6 @@ const updateUserAvatar = async ({ avatar, currentUser }) => {
 
 const deleteUserAvatar = async ({ currentUser }) => {
   try {
-    console.log("hello from delete avatar ");
     await deleteObject(ref(storage, currentUser.avatarPath));
 
     if (currentUser.uid)
@@ -318,4 +340,5 @@ export {
   getUserLastMsg,
   logout,
   signInWithGoogle,
+  reloadFirebaseData,
 };
