@@ -16,7 +16,9 @@ const Signup = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { authData }: any = useSelector((state: RootState) => state.user);
+  const { authData, error, isLoading }: any = useSelector(
+    (state: RootState) => state.user
+  );
 
   useEffect(() => {
     if (authData) {
@@ -33,18 +35,16 @@ const Signup = () => {
     name: "",
     email: "",
     password: "",
-    error: null,
-    loading: false,
   });
 
-  const { name, email, password, error, loading } = data;
+  const { name, email, password } = data;
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    setData({ ...data, error: null, loading: true });
+    setData({ ...data });
 
     if (!name || !email || !password) {
-      setData({ ...data, error: "All fields are required" });
+      setData({ ...data });
     }
     try {
       dispatch(emailSignUpFetch({ name, email, password }));
@@ -53,11 +53,9 @@ const Signup = () => {
         name: "",
         email: "",
         password: "",
-        error: null,
-        loading: false,
       });
     } catch (error) {
-      setData({ ...data, error: error, loading: false });
+      setData({ ...data });
     }
   };
 
@@ -111,7 +109,7 @@ const Signup = () => {
           <FullButton
             label="Signup"
             type="submit"
-            isDisabled={loading}
+            isDisabled={isLoading}
             isDisabledTxt="Registering..."
           />
 

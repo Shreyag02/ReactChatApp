@@ -74,7 +74,7 @@ function* emailSignup({ payload }: any): Generator<
 > {
   try {
     const data: any = yield signupWithEmailAndPassword(payload);
-
+    console.log(typeof data);
     yield put(userAuthSuccess(data?.authData));
     yield put(emailSignUpSuccess(data?.userData));
   } catch (error) {

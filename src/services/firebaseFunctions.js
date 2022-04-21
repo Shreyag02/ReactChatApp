@@ -51,7 +51,8 @@ const signupWithEmailAndPassword = async ({ email, password, name }) => {
     await setDoc(doc(db, "users", result.user.uid), userData);
     return { userData, authData };
   } catch (error) {
-    return error;
+    console.log(error, error.code);
+    throw error;
   }
 };
 
@@ -63,7 +64,8 @@ const reloadFirebaseData = async (sessionData) => {
 
     return { authData: sessionData, userData };
   } catch (error) {
-    return error;
+    console.log(error);
+    throw error;
   }
 };
 
@@ -90,7 +92,8 @@ const loginWithEmailAndPassword = async ({ email, password }) => {
 
     return { userData, authData };
   } catch (error) {
-    return error;
+    console.log(error);
+    throw error;
   }
 };
 
@@ -143,8 +146,8 @@ const signInWithGoogle = async ({ payload }) => {
       // const email = error.email;
       // // The AuthCredential type that was used.
       // const credential = GoogleAuthProvider.credentialFromError(error);
-
-      return error;
+      console.log(error);
+      throw error;
     });
 
   return data;
@@ -177,7 +180,8 @@ const firebaseUsers = async ({ loggedInUserUID }) => {
       return () => unsub();
     });
   } catch (error) {
-    return error;
+    console.log(error);
+    throw error;
   }
 };
 
@@ -198,7 +202,8 @@ const firebaseChatMsgs = async ({ id }) => {
       return () => unsub();
     });
   } catch (error) {
-    return error;
+    console.log(error);
+    throw error;
   }
 };
 
@@ -239,7 +244,8 @@ const addNewMsg = async ({ loggedInUserUID, chatUserUID, img, text }) => {
     });
     return true;
   } catch (error) {
-    return error;
+    console.log(error);
+    throw error;
   }
 };
 
@@ -265,7 +271,8 @@ const getUserLastMsg = async ({ id, data }) => {
     //   });
     //   return () => unsub();
     // });
-    return error;
+    console.log(error);
+    throw error;
   }
 };
 
@@ -280,7 +287,8 @@ const lastMsgStatus = async ({ id, loggedInUserUID }) => {
     }
     return true;
   } catch (error) {
-    return error;
+    console.log(error);
+    throw error;
   }
 };
 
@@ -309,7 +317,8 @@ const updateUserAvatar = async ({ avatar, currentUser }) => {
       avatarPath: snap.ref.fullPath,
     };
   } catch (error) {
-    return error;
+    console.log(error);
+    throw error;
   }
 };
 
@@ -324,7 +333,8 @@ const deleteUserAvatar = async ({ currentUser }) => {
       });
     return true;
   } catch (error) {
-    return error;
+    console.log(error);
+    throw error;
   }
 };
 

@@ -34,15 +34,11 @@ interface UserCredentials {
   name: string;
   email: string;
   password: string;
-  error: any;
-  loading: boolean;
 }
 
 interface LoginCredentials {
   email: string;
   password: string;
-  // error: any;
-  // loading: boolean;
 }
 
 interface FullButtonProps {
